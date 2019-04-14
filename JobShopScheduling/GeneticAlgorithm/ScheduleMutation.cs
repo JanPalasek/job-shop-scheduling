@@ -23,7 +23,7 @@
                 swapMutation.Mutate((IChromosome)gene.Value, probability);
             }
 
-            // TODO: perform fix of the structure
+            // TODO: perform fix of the structure (after mutation and crossover the structure can be invalid => we need to fix it)
         }
     }
 }
