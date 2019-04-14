@@ -1,15 +1,13 @@
-﻿using System;
-
-namespace JobShopScheduling
+﻿namespace JobShopScheduling
 {
     using GeneticSharp.Domain;
     using GeneticSharp.Domain.Crossovers;
 
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            new GeneticAlgorithm().Start();
+            // TODO: start genetic algorithm
         }
     }
 }
