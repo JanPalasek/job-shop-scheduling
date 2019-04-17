@@ -30,7 +30,7 @@
                 foreach (var gene in chromosome.GetGenes())
                 {
                     var machineChromosome = (MachineChromosome)gene.Value;
-                    for (int i = 0; i < machineChromosome.RealLength / 2; i++)
+                    for (int i = 0; i < machineChromosome.RealLength; i++)
                     {
                         if (RandomizationProvider.Current.GetDouble() < mutationPerBitProbability)
                         {

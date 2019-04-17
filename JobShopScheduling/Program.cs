@@ -13,7 +13,7 @@
     {
         private static void Main(string[] args)
         {
-            int populationSize = 300;
+            int populationSize = 500;
 
             var generator = new JobShopGenerator();
             int[] jobOperationCounts = {
@@ -33,7 +33,7 @@
             var geneticAlgorithm =
                 new GeneticSharp.Domain.GeneticAlgorithm(population, fitness, selection, crossover, mutation)
                 {
-                    Termination = new GenerationNumberTermination(40),
+                    Termination = new GenerationNumberTermination(100),
                     MutationProbability = Config.MutationProbability,
                     CrossoverProbability = Config.CrossoverProbability,
                     //Reinsertion = new Elitism(Config.ElitismPercent)

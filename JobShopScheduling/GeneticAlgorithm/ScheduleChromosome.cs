@@ -122,8 +122,18 @@
 
             this.graph = graph;
 
+            //AssertNoCycle(graph);
+
             return graph;
         }
+
+        private void AssertNoCycle(DiGraph<Operation> graph)
+        {
+            if (new CycleDetector<Operation>().HasCycle(graph))
+            {
+                throw new ArgumentException("Cycle detected.");
+            }
+        } 
 
         public string GetOperationStrings()
         {

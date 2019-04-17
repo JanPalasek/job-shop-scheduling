@@ -7,6 +7,10 @@
     using Advanced.Algorithms.Graph;
     using GeneticSharp.Domain.Randomizations;
 
+    /// <summary>
+    /// Component that is designed to break cycles of the graph. It changes orientation of edges so
+    /// there are not oriented cycles anymore.
+    /// </summary>
     public class CycleBreaker
     {
         private readonly double backEdgeBreakProbability;
@@ -32,12 +36,14 @@
             List<List<Operation>> components;
             do
             {
+                // find strongly connected components
                 components = algorithm.FindStronglyConnectedComponents(graph).Where(x => x.Count > 1).ToList();
                 foreach (List<Operation> component in components)
                 {
                     var componentHashSet = component.ToHashSet();
                     foreach (var operation1 in component.AsShuffledEnumerable())
                     {
+                        // get all neighbor operations that are in the same component
                         var neighborOperations = GetNeighborComponentOperations(graph, operation1, componentHashSet);
 
                         foreach (var operation2 in neighborOperations)
