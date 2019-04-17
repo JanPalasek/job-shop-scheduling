@@ -1,9 +1,11 @@
 ﻿namespace JobShopScheduling
 {
     using System;
+    using System.Linq;
     using Advanced.Algorithms.Graph;
     using GeneticAlgorithm;
     using GeneticSharp.Domain.Populations;
+    using GeneticSharp.Domain.Randomizations;
     using GeneticSharp.Domain.Selections;
     using GeneticSharp.Domain.Terminations;
 
@@ -11,13 +13,13 @@
     {
         private static void Main(string[] args)
         {
-            int populationSize = 150;
+            int populationSize = 300;
 
             var generator = new JobShopGenerator();
             int[] jobOperationCounts = {
-                20, 10, 15
+                25, 20, 25, 20, 25, 20
             };
-            int machinesCount = 5;
+            int machinesCount = 10;
 
             var jobShop = generator.Generate(jobOperationCounts, machinesCount);
 
@@ -27,18 +29,27 @@
             var fitness = new ScheduleFitness();
             var selection = new TournamentSelection();
             var crossover = new SchedulesCrossover();
-            var mutation = new ScheduleMutation();
+            var mutation = new ScheduleMutation(Config.MutationPerBitProbability);
             var geneticAlgorithm =
                 new GeneticSharp.Domain.GeneticAlgorithm(population, fitness, selection, crossover, mutation)
                 {
-                    Termination = new GenerationNumberTermination(50),
-                    MutationProbability = 0.6f,
-                    CrossoverProbability = 0.5f
+                    Termination = new GenerationNumberTermination(40),
+                    MutationProbability = Config.MutationProbability,
+                    CrossoverProbability = Config.CrossoverProbability,
+                    //Reinsertion = new Elitism(Config.ElitismPercent)
                 };
             geneticAlgorithm.GenerationRan += (sender, e) =>
             {
-                var scheduleLength = ((ScheduleChromosome)geneticAlgorithm.BestChromosome).ScheduleLength;
-                Console.WriteLine($"Generation: {geneticAlgorithm.GenerationsNumber} - Schedule length: {scheduleLength:F}");
+                var bestChromosome = (ScheduleChromosome) geneticAlgorithm.BestChromosome;
+                fitness.Evaluate(bestChromosome);
+                Console.WriteLine($"Generation: {geneticAlgorithm.GenerationsNumber}");
+                Console.WriteLine($"Best schedule length: {bestChromosome.ScheduleLength:F}");
+                var avg = geneticAlgorithm.Population.CurrentGeneration.Chromosomes.Cast<ScheduleChromosome>()
+                    .Average(x => x.ScheduleLength);
+                Console.WriteLine($"Average schedule length: {avg:F}");
+                
+                Console.WriteLine(bestChromosome.GetOperationStrings());
+                
             };
             geneticAlgorithm.Start();
         }

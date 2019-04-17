@@ -3,6 +3,7 @@
     using System;
     using System.Linq;
     using System.Collections.Generic;
+    using System.Text;
     using Advanced.Algorithms.DataStructures.Foundation;
     using Advanced.Algorithms.DataStructures.Graph.AdjacencyList;
     using Advanced.Algorithms.Graph;
@@ -56,7 +57,8 @@
 
         public DiGraph<Operation> ToDirectedGraph()
         {
-            // fitness is not null => cycles are fixed => graph is correctly still cached
+            // fitness is not null => cycles are fixed already => graph is correctly cached
+            // whenever some operation changes the element, fitness is reset
             if (Fitness != null)
             {
                 return this.graph;
@@ -105,7 +107,10 @@
                 }
             }
 
-            var edgesThatChangedOrientation = new CycleBreaker().BreakCycles(graph);
+            // break cycles
+            var edgesThatChangedOrientation = new CycleBreaker(Config.BackEdgeSwitchOrientationProbability,
+                Config.NormalEdgeSwitchOrientationProbability).BreakCycles(graph);
+
             // update chromosomes accordingly
             foreach ((Operation Operation1, Operation Operation2) edge in edgesThatChangedOrientation)
             {
@@ -118,6 +123,18 @@
             this.graph = graph;
 
             return graph;
+        }
+
+        public string GetOperationStrings()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            foreach (var machineChromosome in GetGenes().Select(x => x.Value).Cast<MachineChromosome>())
+            {
+                sb.AppendLine(machineChromosome.GetOperationStrings());
+            }
+
+            return sb.ToString();
         }
     }
 }

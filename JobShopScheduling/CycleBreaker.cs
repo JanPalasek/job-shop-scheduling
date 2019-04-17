@@ -5,9 +5,19 @@
     using System.Linq;
     using Advanced.Algorithms.DataStructures.Graph.AdjacencyList;
     using Advanced.Algorithms.Graph;
+    using GeneticSharp.Domain.Randomizations;
 
     public class CycleBreaker
     {
+        private readonly double backEdgeBreakProbability;
+        private readonly double otherEdgeBreakProbability;
+
+        public CycleBreaker(double backEdgeBreakProbability, double otherEdgeBreakProbability)
+        {
+            this.backEdgeBreakProbability = backEdgeBreakProbability;
+            this.otherEdgeBreakProbability = otherEdgeBreakProbability;
+        }
+
         /// <summary>
         /// Breaks cycles in the graph, returning all edges that changed their orientation.
         /// </summary>
@@ -26,21 +36,39 @@
                 foreach (List<Operation> component in components)
                 {
                     var componentHashSet = component.ToHashSet();
-                    foreach (var operation1 in component)
+                    foreach (var operation1 in component.AsShuffledEnumerable())
                     {
                         var neighborOperations = GetNeighborComponentOperations(graph, operation1, componentHashSet);
 
                         foreach (var operation2 in neighborOperations)
                         {
-                            // two operations are not on the same job and  operation 1 is after operation 2 (and edge is between them ofc)
-                            if (operation1.JobId != operation2.JobId && operation1.Order > operation2.Order && operation1.MachineId == operation2.MachineId)
+                            // two operations are not on the same job and edge is between them
+                            if (operation1.JobId != operation2.JobId
+                                && operation1.MachineId == operation2.MachineId)
                             {
-                                // switch edge orientation
-                                graph.RemoveEdge(operation1, operation2);
-                                graph.AddEdge(operation2, operation1);
+                                // if it is back edge => switch orientation of the edge with backEdgeBreakProbability
+                                if (operation1.Order > operation2.Order
+                                    && RandomizationProvider.Current.GetDouble() < backEdgeBreakProbability)
+                                {
+                                    // switch edge orientation
+                                    graph.RemoveEdge(operation1, operation2);
+                                    graph.AddEdge(operation2, operation1);
 
-                                changedOrientationEdges.Add((operation1, operation2));
-                                goto cycleOut;
+                                    changedOrientationEdges.Add((operation1, operation2));
+                                    goto cycleOut;
+                                }
+
+                                // if it isn't back edge => switch orientation of the edge with otherEdgeBreakProbability
+                                if (operation1.Order <= operation2.Order
+                                         && RandomizationProvider.Current.GetDouble() < otherEdgeBreakProbability)
+                                {
+                                    // switch edge orientation
+                                    graph.RemoveEdge(operation1, operation2);
+                                    graph.AddEdge(operation2, operation1);
+
+                                    changedOrientationEdges.Add((operation1, operation2));
+                                    goto cycleOut;
+                                }
                             }
                         }
                     }

@@ -1,7 +1,9 @@
 ﻿namespace JobShopScheduling.GeneticAlgorithm
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
+    using System.Text;
     using GeneticSharp.Domain.Chromosomes;
 
     public class MachineChromosome : ChromosomeBase
@@ -44,13 +46,30 @@
         /// <param name="edge"></param>
         public void UpdateEdgeOrientation((Operation Operation1, Operation Operation2) edge)
         {
-            var machineOperations = GetGenes().Select(x => x.Value).Cast<Operation>().ToList();
+            var machineOperations = GetMachineOperations().ToList();
 
             int operation1Index = machineOperations.IndexOf(edge.Operation1);
             int operation2Index = machineOperations.IndexOf(edge.Operation2);
 
             ReplaceGene(operation1Index, new Gene(edge.Operation2));
             ReplaceGene(operation2Index, new Gene(edge.Operation1));
+        }
+
+        public string GetOperationStrings()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            foreach (var operation in GetMachineOperations())
+            {
+                sb.Append($"{operation.Id}, ");
+            }
+
+            return sb.ToString();
+        }
+
+        private IEnumerable<Operation> GetMachineOperations()
+        {
+            return GetGenes().Select(x => x.Value).Cast<Operation>().Where(x => x != null);
         }
     }
 }

@@ -3,19 +3,13 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using GeneticSharp.Domain.Randomizations;
 
     /// <summary>
     /// Component that can generate <see cref="JobShop"/>.
     /// </summary>
     public class JobShopGenerator
     {
-        private readonly Random random;
-
-        public JobShopGenerator()
-        {
-            this.random = new Random();
-        }
-
         /// <summary>
         /// Creates new instance of <see cref="JobShop"/>.
         /// </summary>
@@ -25,7 +19,7 @@
         public JobShop Generate(int[] jobOperationCounts, int machinesCount)
         {
             var jobs = new List<Job>();
-            int maximumOperationCost = 10;
+            int maximumOperationCost = 50;
 
             int lastFreeOperationId = 0;
             for (int jobId = 0; jobId < jobOperationCounts.Length; jobId++)
@@ -34,8 +28,8 @@
                 var operations = new List<Operation>();
                 for (int operationOrder = 0; operationOrder < operationCount; operationOrder++)
                 {
-                    int machineId = random.Next(machinesCount);
-                    double operationCost = random.NextDouble() * maximumOperationCost;
+                    int machineId = RandomizationProvider.Current.GetInt(0, machinesCount);
+                    double operationCost = RandomizationProvider.Current.GetDouble(0, maximumOperationCost);
 
                     var operation = new Operation(lastFreeOperationId, jobId, machineId, operationOrder, operationCost);
                     operations.Add(operation);

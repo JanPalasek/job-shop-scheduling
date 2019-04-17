@@ -7,7 +7,7 @@
 
     public class SchedulesCrossover : CrossoverBase
     {
-        private readonly PartiallyMappedCrossover crossover;
+        private readonly ICrossover crossover;
 
         public SchedulesCrossover() : base(2, 2)
         {
@@ -24,8 +24,8 @@
                 throw new ArgumentException("Different length of parents, cannot be crossed.");
             }
 
-            var scheduleChild1 = (ScheduleChromosome)scheduleParent1.CreateNew();
-            var scheduleChild2 = (ScheduleChromosome)scheduleParent2.CreateNew();
+            var scheduleChild1 = (ScheduleChromosome)scheduleParent1.Clone();
+            var scheduleChild2 = (ScheduleChromosome)scheduleParent2.Clone();
             for (int i = 0; i < scheduleParent1.Length; i++)
             {
                 var machine1 = (MachineChromosome)scheduleParent1.GetGene(i).Value;
@@ -41,6 +41,7 @@
                 var child1 = (MachineChromosome)result[0];
                 var child2 = (MachineChromosome)result[1];
 
+                // replace genes (automatically resets fitness)
                 scheduleChild1.ReplaceGene(i, new Gene(child1));
                 scheduleChild1.ScheduleLength = 0;
                 scheduleChild2.ReplaceGene(i, new Gene(child2));
