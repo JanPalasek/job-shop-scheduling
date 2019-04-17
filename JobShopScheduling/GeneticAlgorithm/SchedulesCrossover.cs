@@ -16,10 +16,8 @@
 
         protected override IList<IChromosome> PerformCross(IList<IChromosome> parents)
         {
-            var typedParents = (IList<ScheduleChromosome>)parents;
-
-            var scheduleParent1 = typedParents[0];
-            var scheduleParent2 = typedParents[1];
+            var scheduleParent1 = parents[0];
+            var scheduleParent2 = parents[1];
 
             if (scheduleParent1.Length != scheduleParent2.Length)
             {
@@ -30,8 +28,13 @@
             var scheduleChild2 = (ScheduleChromosome)scheduleParent2.CreateNew();
             for (int i = 0; i < scheduleParent1.Length; i++)
             {
-                var machine1 = (IChromosome)scheduleParent1.GetGene(i).Value;
-                var machine2 = (IChromosome)scheduleParent2.GetGene(i).Value;
+                var machine1 = (MachineChromosome)scheduleParent1.GetGene(i).Value;
+                var machine2 = (MachineChromosome)scheduleParent2.GetGene(i).Value;
+
+                if (machine1.RealLength < 3)
+                {
+                    continue;
+                }
 
                 var result = crossover.Cross(new List<IChromosome>() { machine1, machine2 });
 
@@ -39,7 +42,9 @@
                 var child2 = (MachineChromosome)result[1];
 
                 scheduleChild1.ReplaceGene(i, new Gene(child1));
+                scheduleChild1.ScheduleLength = 0;
                 scheduleChild2.ReplaceGene(i, new Gene(child2));
+                scheduleChild2.ScheduleLength = 0;
             }
 
             return new List<IChromosome>() { scheduleChild1, scheduleChild2 };

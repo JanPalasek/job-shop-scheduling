@@ -4,6 +4,11 @@
 
     public class Job
     {
-        public List<Operation> Operations { get; }
+        public IReadOnlyList<Operation> Operations { get; }
+
+        public Job(List<Operation> operations)
+        {
+            Operations = operations;
+        }
     }
 }

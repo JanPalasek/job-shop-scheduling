@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Advanced.Algorithms" Version="0.0.434-beta" />
     <PackageReference Include="GeneticSharp" Version="2.5.1" />
   </ItemGroup>
 
