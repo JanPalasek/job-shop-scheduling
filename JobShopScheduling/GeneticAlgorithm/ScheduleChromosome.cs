@@ -52,6 +52,7 @@
             var scheduleChromosome = (ScheduleChromosome)base.Clone();
             scheduleChromosome.jobShop = this.jobShop;
             scheduleChromosome.ScheduleLength = this.ScheduleLength;
+            scheduleChromosome.graph = this.graph;
             return scheduleChromosome;
         }
 

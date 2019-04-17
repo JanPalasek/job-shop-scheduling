@@ -15,6 +15,11 @@
 
         private double Evaluate(ScheduleChromosome chromosome)
         {
+            if (chromosome.Fitness != null)
+            {
+                return chromosome.Fitness.Value;
+            }
+
             // create graph
             var graph = chromosome.ToDirectedGraph();
 

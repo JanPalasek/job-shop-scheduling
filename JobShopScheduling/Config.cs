@@ -5,6 +5,7 @@
         public static float MutationProbability { get; }
         public static float CrossoverProbability { get; }
         public static float MutationPerBitProbability { get; }
+        public static float TournamentProbability { get; }
         public static float ElitismPercent { get; }
 
         public static float BackEdgeSwitchOrientationProbability { get; }
@@ -13,13 +14,14 @@
 
         static Config()
         {
-            MutationProbability = 0.6f;
+            MutationProbability = 0.4f;
             CrossoverProbability = 0.75f;
             MutationPerBitProbability = 0.05f;
-            ElitismPercent = 0.01f;
+            ElitismPercent = 0.04f;
+            TournamentProbability = 0.9f;
 
-            BackEdgeSwitchOrientationProbability = 0.7f;
-            NormalEdgeSwitchOrientationProbability = 0.3f;
+            BackEdgeSwitchOrientationProbability = 0.75f;
+            NormalEdgeSwitchOrientationProbability = 0.2f;
         }
     }
 }

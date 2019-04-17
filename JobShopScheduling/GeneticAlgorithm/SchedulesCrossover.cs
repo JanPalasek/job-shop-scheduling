@@ -5,16 +5,26 @@
     using GeneticSharp.Domain.Chromosomes;
     using GeneticSharp.Domain.Crossovers;
 
-    public class SchedulesCrossover : CrossoverBase
+    public class SchedulesCrossover : ICrossover
     {
         private readonly ICrossover crossover;
 
-        public SchedulesCrossover() : base(2, 2)
+        public bool IsOrdered { get; }
+        public int ParentsNumber { get; }
+        public int ChildrenNumber { get; }
+        public int MinChromosomeLength { get; }
+
+        public SchedulesCrossover()
         {
             crossover = new PartiallyMappedCrossover();
+
+            IsOrdered = true;
+            ParentsNumber = 2;
+            ChildrenNumber = 2;
+            MinChromosomeLength = 0;
         }
 
-        protected override IList<IChromosome> PerformCross(IList<IChromosome> parents)
+        public IList<IChromosome> Cross(IList<IChromosome> parents)
         {
             var scheduleParent1 = parents[0];
             var scheduleParent2 = parents[1];

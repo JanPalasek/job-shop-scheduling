@@ -29,9 +29,9 @@
             }
 
             // add best parents
-            foreach (var bestParents in bestResultsFromParents)
+            foreach (var parent in bestResultsFromParents)
             {
-                offspring.Add(bestParents);
+                offspring.Add(parent);
             }
 
             return offspring;
