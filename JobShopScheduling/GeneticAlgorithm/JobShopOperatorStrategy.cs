@@ -1,5 +1,6 @@
 ﻿namespace JobShopScheduling.GeneticAlgorithm
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using GeneticSharp.Domain;
@@ -14,17 +15,21 @@
         public IList<IChromosome> Cross(IPopulation population, ICrossover crossover, float crossoverProbability, IList<IChromosome> parents)
         {
             var offspring = new List<IChromosome>();
+            var clonedParents = parents.Select(x => x.Clone()).ToList();
 
-            for (int i = 0; i < population.MinSize; i += crossover.ParentsNumber)
+            for (int i = 0; i < population.MaxSize; i += crossover.ParentsNumber)
             {
-                var selectedParents = parents.Skip(i).Take(crossover.ParentsNumber).ToList();
+                var selectedParents = clonedParents.Skip(i).Take(crossover.ParentsNumber).ToList();
 
                 // If match the probability cross is made, otherwise the offspring is an exact copy of the parents.
                 // Checks if the number of selected parents is equal which the crossover expect, because the in the end of the list we can
                 // have some rest chromosomes.
                 if (selectedParents.Count == crossover.ParentsNumber)
                 {
-                    offspring.AddRange(crossover.Cross(selectedParents));
+                    bool shouldCrossover = RandomizationProvider.Current.GetDouble() < crossoverProbability;
+
+                    offspring.AddRange(shouldCrossover ?
+                        crossover.Cross(selectedParents) : selectedParents);
                 }
                 else
                 {
@@ -33,7 +38,7 @@
                     int leftToAdd = crossover.ParentsNumber - selectedParents.Count;
                     for (int j = 0; j < leftToAdd; j++)
                     {
-                        offspring.Add(parents[RandomizationProvider.Current.GetInt(0, parents.Count)]);
+                        offspring.Add(clonedParents[RandomizationProvider.Current.GetInt(0, clonedParents.Count)].Clone());
                     }
                 }
             }

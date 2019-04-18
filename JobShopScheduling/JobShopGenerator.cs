@@ -8,8 +8,14 @@
     /// <summary>
     /// Component that can generate <see cref="JobShop"/>.
     /// </summary>
-    public class JobShopGenerator
+    public class JobShopGenerator : IRandomInjectable
     {
+        private Random random;
+
+        public JobShopGenerator()
+        {
+            this.random = new Random();
+        }
         /// <summary>
         /// Creates new instance of <see cref="JobShop"/>.
         /// </summary>
@@ -28,8 +34,8 @@
                 var operations = new List<Operation>();
                 for (int operationOrder = 0; operationOrder < operationCount; operationOrder++)
                 {
-                    int machineId = RandomizationProvider.Current.GetInt(0, machinesCount);
-                    double operationCost = RandomizationProvider.Current.GetDouble(0, maximumOperationCost);
+                    int machineId = random.Next(0, machinesCount);
+                    double operationCost = random.NextDouble() *  maximumOperationCost;
 
                     var operation = new Operation(lastFreeOperationId, jobId, machineId, operationOrder, operationCost);
                     operations.Add(operation);
@@ -43,6 +49,11 @@
 
             var jobShop = new JobShop(jobs);
             return jobShop;
+        }
+
+        void IRandomInjectable.InjectRandom(Random random)
+        {
+            this.random = random;
         }
     }
 }

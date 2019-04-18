@@ -11,5 +11,22 @@
         {
             return enumerable.OrderBy(x => RandomizationProvider.Current.GetInt(0, int.MaxValue));
         }
+
+        public static decimal Variance<TType>(this IEnumerable<TType> enumerable, Func<TType, decimal> func)
+        {
+            enumerable = enumerable.ToList();
+
+            decimal avg = enumerable.Average(func);
+
+            decimal sumValue = 0;
+            foreach (decimal value in enumerable.Select(func))
+            {
+                sumValue += (value - avg) * (value - avg);
+            }
+
+            decimal variance = sumValue / enumerable.Count();
+
+            return variance;
+        }
     }
 }

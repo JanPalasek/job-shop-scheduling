@@ -2,6 +2,7 @@
 {
     using System;
     using System.Linq;
+    using System.Reflection;
     using Advanced.Algorithms.Graph;
     using GeneticAlgorithm;
     using GeneticSharp.Domain.Chromosomes;
@@ -16,34 +17,51 @@
     {
         private static void Main(string[] args)
         {
-            int populationSize = 200;
-
             var generator = new JobShopGenerator();
-            int[] jobOperationCounts = {
-                30, 35, 29, 30, 30, 20, 30
-            };
-            int machinesCount = 15;
 
-            var jobShop = generator.Generate(jobOperationCounts, machinesCount);
+            var random = new Random(42);
+            ((IRandomInjectable)generator).InjectRandom(random);
+
+            var jobShop = generator.Generate(Config.OperationCounts, Config.MachinesCount);
 
             var adamChromosome = new ScheduleChromosome(jobShop);
-
-            var population = new Population(populationSize, populationSize, adamChromosome);
+            var population = new Population(Config.MinPopulationSize, Config.MaxPopulationSize, adamChromosome);
 
             var fitness = new ScheduleFitness();
-            var selection = new JobShopTournamentSelection(fitness, Config.TournamentProbability);
+            var selection = new NonDeterministicTournamentSelection(Config.TournamentSelectionProbability);
             var crossover = new SchedulesCrossover();
             var mutation = new ScheduleMutation(Config.MutationPerBitProbability);
             var geneticAlgorithm =
                 new GeneticSharp.Domain.GeneticAlgorithm(population, fitness, selection, crossover, mutation)
                 {
-                    Termination = new GenerationNumberTermination(100),
+                    Termination = new GenerationNumberTermination(Config.GenerationsCount),
                     MutationProbability = Config.MutationProbability,
                     CrossoverProbability = Config.CrossoverProbability,
                     OperatorsStrategy = new JobShopOperatorStrategy(),
-                    Reinsertion = new Elitism(Config.ElitismPercent)
+                    Reinsertion = new JobShopReinsertion(
+                        new EliteSelection(), 
+                        new Elitism(Config.ElitismPercent),
+                        fitness
+                        )
                 };
-            geneticAlgorithm.GenerationRan += (sender, e) => { Print(geneticAlgorithm); };
+            //ScheduleChromosome bestChromosome = null;
+            geneticAlgorithm.GenerationRan += (sender, e) =>
+            {
+                Print(geneticAlgorithm);
+
+                //var chromosome = (ScheduleChromosome)geneticAlgorithm.BestChromosome;
+
+                //if (bestChromosome == null)
+                //{
+                //    bestChromosome = chromosome;
+                //}
+                //else if (chromosome.ScheduleLength > bestChromosome.ScheduleLength)
+                //{
+                //    Console.WriteLine("INCREASE IN BEST VALUE");
+                //}
+
+                //bestChromosome = chromosome;
+            };
             //geneticAlgorithm.TaskExecutor = new ParallelTaskExecutor()
             //{
             //    MinThreads = 1,
@@ -57,12 +75,20 @@
             var bestChromosome = (ScheduleChromosome)geneticAlgorithm.BestChromosome;
             Console.WriteLine($"Generation: {geneticAlgorithm.GenerationsNumber}");
             Console.WriteLine($"Best schedule length: {bestChromosome.ScheduleLength:F}");
-            var avg = geneticAlgorithm.Population.CurrentGeneration.Chromosomes.Cast<ScheduleChromosome>()
-                .Average(x => x.ScheduleLength);
-            Console.WriteLine($"Average schedule length: {avg:F}");
+            var chromosomes = geneticAlgorithm.Population.CurrentGeneration.Chromosomes.Cast<ScheduleChromosome>();
+            Console.WriteLine($"Average schedule length: {chromosomes.Average(x => x.ScheduleLength):F}");
+            //Console.WriteLine($"Population variance: {chromosomes.Variance(x => (decimal)x.ScheduleLength.Value):F}");
             Console.WriteLine($"Population size: {geneticAlgorithm.Population.CurrentGeneration.Chromosomes.Count}");
 
-            //Console.WriteLine(bestChromosome.GetOperationStrings());
+            //foreach (var chromosome in geneticAlgorithm.Population.CurrentGeneration.Chromosomes
+            //    .OrderBy(x => x.Fitness).Cast<ScheduleChromosome>())
+            //{
+            //    Console.WriteLine($"{chromosome.ScheduleLength:F}");
+            //    Console.WriteLine(chromosome.GetOperationStrings());
+            //}
+
+            Console.WriteLine();
+            Console.WriteLine();
         }
     }
 }

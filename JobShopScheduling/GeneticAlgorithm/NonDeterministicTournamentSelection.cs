@@ -8,14 +8,12 @@
     using GeneticSharp.Domain.Randomizations;
     using GeneticSharp.Domain.Selections;
 
-    public class JobShopTournamentSelection : ISelection
+    public class NonDeterministicTournamentSelection : ISelection
     {
-        private readonly IFitness fitness;
         private readonly float probability;
 
-        public JobShopTournamentSelection(IFitness fitness, float probability)
+        public NonDeterministicTournamentSelection(float probability)
         {
-            this.fitness = fitness;
             this.probability = probability;
         }
 
@@ -26,17 +24,20 @@
             var chromosomes = generation.Chromosomes;
             for (int i = 0; i < number; i++)
             {
+                IChromosome chromosome;
                 var chromosome1 = chromosomes[RandomizationProvider.Current.GetInt(0, chromosomes.Count)];
                 var chromosome2 = chromosomes[RandomizationProvider.Current.GetInt(0, chromosomes.Count)];
 
-                if (fitness.Evaluate(chromosome1) > fitness.Evaluate(chromosome2))
+                if (chromosome1.Fitness > chromosome2.Fitness)
                 {
-                    result.Add(RandomizationProvider.Current.GetDouble() < probability ? chromosome1 : chromosome2);
+                    chromosome = RandomizationProvider.Current.GetDouble() < probability ? chromosome1 : chromosome2;
                 }
                 else
                 {
-                    result.Add(RandomizationProvider.Current.GetDouble() < probability ? chromosome2 : chromosome1);
+                    chromosome = RandomizationProvider.Current.GetDouble() < probability ? chromosome2 : chromosome1;
                 }
+
+                result.Add(chromosome);
             }
 
             return result;

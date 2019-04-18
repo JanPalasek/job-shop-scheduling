@@ -38,7 +38,7 @@
             {
                 // find strongly connected components
                 components = algorithm.FindStronglyConnectedComponents(graph).Where(x => x.Count > 1).ToList();
-                foreach (List<Operation> component in components)
+                foreach (List<Operation> component in components.AsShuffledEnumerable())
                 {
                     var componentHashSet = component.ToHashSet();
                     foreach (var operation1 in component.AsShuffledEnumerable())
@@ -46,7 +46,7 @@
                         // get all neighbor operations that are in the same component
                         var neighborOperations = GetNeighborComponentOperations(graph, operation1, componentHashSet);
 
-                        foreach (var operation2 in neighborOperations)
+                        foreach (var operation2 in neighborOperations.AsShuffledEnumerable())
                         {
                             // two operations are not on the same job and edge is between them
                             if (operation1.JobId != operation2.JobId
