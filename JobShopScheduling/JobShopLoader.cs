@@ -20,7 +20,7 @@
                     var operations = new List<Operation>();
                     string[] lineArgs = reader.ReadLine().Split(new []{ ' '}, StringSplitOptions.RemoveEmptyEntries);
 
-                    for (int order = 0; order < lineArgs.Length / 2; order += 2)
+                    for (int order = 0; order < lineArgs.Length / 2; order++)
                     {
                         int machineId = int.Parse(lineArgs[order * 2]);
                         double cost = double.Parse(lineArgs[order * 2 + 1]);

@@ -11,12 +11,12 @@
     /// Component that is designed to break cycles of the graph. It changes orientation of edges so
     /// there are not oriented cycles anymore.
     /// </summary>
-    public class CycleBreaker
+    internal class GraphCycleBreaker
     {
         private readonly double backEdgeBreakProbability;
         private readonly double otherEdgeBreakProbability;
 
-        public CycleBreaker(double backEdgeBreakProbability, double otherEdgeBreakProbability)
+        public GraphCycleBreaker(double backEdgeBreakProbability, double otherEdgeBreakProbability)
         {
             this.backEdgeBreakProbability = backEdgeBreakProbability;
             this.otherEdgeBreakProbability = otherEdgeBreakProbability;

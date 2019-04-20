@@ -44,7 +44,7 @@
         /// Updates chromosome based on edge
         /// </summary>
         /// <param name="edge"></param>
-        public void UpdateEdgeOrientation((Operation Operation1, Operation Operation2) edge)
+        public void SwitchEdgeOrientation((Operation Operation1, Operation Operation2) edge)
         {
             var machineOperations = GetMachineOperations().ToList();
 

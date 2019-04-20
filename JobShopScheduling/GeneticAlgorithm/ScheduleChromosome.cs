@@ -14,7 +14,7 @@
         /// <summary>
         /// List of jobs that have to be done.
         /// </summary>
-        private JobShop jobShop;
+        public JobShop JobShop { get; private set; }
 
         private DiGraph<Operation> graph;
 
@@ -22,7 +22,7 @@
 
         public ScheduleChromosome(JobShop jobShop) : base(jobShop.MachinesCount)
         {
-            this.jobShop = jobShop;
+            this.JobShop = jobShop;
 
             // initialize genes
             for (int i = 0; i < jobShop.MachinesCount; i++)
@@ -44,13 +44,13 @@
 
         public override IChromosome CreateNew()
         {
-            return new ScheduleChromosome(jobShop);
+            return new ScheduleChromosome(JobShop);
         }
 
         public override IChromosome Clone()
         {
             var scheduleChromosome = (ScheduleChromosome)base.Clone();
-            scheduleChromosome.jobShop = this.jobShop;
+            scheduleChromosome.JobShop = this.JobShop;
             scheduleChromosome.ScheduleLength = this.ScheduleLength;
             scheduleChromosome.graph = this.graph;
             return scheduleChromosome;
@@ -65,76 +65,24 @@
                 return this.graph;
             }
 
-            // dictionary mapping first operation to its successor
-            var machineOperationsDictionary = new System.Collections.Generic.Dictionary<Operation, Operation>();
-            foreach (var machineChromosome in GetGenes().Select(x => x.Value).Cast<MachineChromosome>().Where(x => x.RealLength >= 2))
-            {
-                var machineOperations = machineChromosome.GetGenes().Select(x => x.Value).Cast<Operation>().ToArray();
-                for (int i = 0; i < machineOperations.Length - 1; i++)
-                {
-                    machineOperationsDictionary.Add(machineOperations[i], machineOperations[i + 1]);
-                }
-            }
-
-            var graph = new DiGraph<Operation>();
-
-            var source = graph.AddVertex(new Operation(int.MinValue, int.MinValue, int.MinValue, int.MinValue, 0));
-            var target = graph.AddVertex(new Operation(int.MaxValue, int.MaxValue, int.MaxValue, int.MaxValue, 0));
-            foreach (var job in jobShop.Jobs)
-            {
-                var lastOperationVertex = source;
-                // connect one path
-                foreach (var operation in job.Operations)
-                {
-                    var currentOperationVertex = graph.AddVertex(operation);
-                    graph.AddEdge(lastOperationVertex.Value, currentOperationVertex.Value);
-
-                    lastOperationVertex = currentOperationVertex;
-                }
-
-                // add edge from last on the path to target
-                graph.AddEdge(lastOperationVertex.Value, target.Value);
-            }
-
-            // add machine edges
-            foreach (var operation in jobShop.Operations)
-            {
-                if (machineOperationsDictionary.TryGetValue(operation, out var nextMachineOperation))
-                {
-                    if (nextMachineOperation.JobId != operation.JobId)
-                    {
-                        graph.AddEdge(operation, nextMachineOperation);
-                    }
-                }
-            }
-
-            // break cycles
-            var edgesThatChangedOrientation = new CycleBreaker(Config.BackEdgeSwitchOrientationProbability,
-                Config.NormalEdgeSwitchOrientationProbability).BreakCycles(graph);
+            var graphHandler = new GraphHandler();
+            var graph = graphHandler.CreateGraph(this);
+            var edgesThatChangedOrientation = graphHandler.BreakCycles(graph);
 
             // update chromosomes accordingly
             foreach ((Operation Operation1, Operation Operation2) edge in edgesThatChangedOrientation)
             {
                 int machineId = edge.Operation1.MachineId;
-                var machineChromosome = (MachineChromosome) GetGene(machineId).Value;
+                var machineChromosome = (MachineChromosome)GetGene(machineId).Value;
 
-                machineChromosome.UpdateEdgeOrientation(edge);
+                machineChromosome.SwitchEdgeOrientation(edge);
             }
+
 
             this.graph = graph;
 
-            //AssertNoCycle(graph);
-
             return graph;
         }
-
-        private void AssertNoCycle(DiGraph<Operation> graph)
-        {
-            if (new CycleDetector<Operation>().HasCycle(graph))
-            {
-                throw new ArgumentException("Cycle detected.");
-            }
-        } 
 
         public string GetOperationStrings()
         {
