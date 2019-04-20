@@ -26,7 +26,8 @@
             MinPopulationSize = 100;
             MaxPopulationSize = 110;
             OperationCounts = new int[]{
-                10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10
+                10, 10, 10, 10, 10, 10, 10, 10, 10, 10,
+                10, 10, 10, 10, 10, 10, 10, 10, 10, 10,
             };
             MachinesCount = 10;
             GenerationsCount = 1000;

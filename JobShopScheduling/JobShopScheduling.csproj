@@ -10,4 +10,16 @@
     <PackageReference Include="GeneticSharp" Version="2.5.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Examples\la26.in">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Examples\ft06.in">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Examples\la19.in">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

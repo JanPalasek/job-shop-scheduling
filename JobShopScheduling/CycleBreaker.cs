@@ -48,7 +48,8 @@
 
                         foreach (var operation2 in neighborOperations.AsShuffledEnumerable())
                         {
-                            // two operations are not on the same job and edge is between them
+                            // two operations are not on the same job
+                            // but are on the same machines (=> can switch their edge orientation if I need to)
                             if (operation1.JobId != operation2.JobId
                                 && operation1.MachineId == operation2.MachineId)
                             {

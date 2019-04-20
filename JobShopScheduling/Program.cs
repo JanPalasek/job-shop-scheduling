@@ -17,12 +17,14 @@
     {
         private static void Main(string[] args)
         {
-            var generator = new JobShopGenerator();
+            //var generator = new JobShopGenerator();
 
-            var random = new Random(42);
-            ((IRandomInjectable)generator).InjectRandom(random);
+            //var random = new Random(42);
+            //((IRandomInjectable)generator).InjectRandom(random);
 
-            var jobShop = generator.Generate(Config.OperationCounts, Config.MachinesCount);
+            //JobShop jobShop = generator.Generate(Config.OperationCounts, Config.MachinesCount);
+
+            JobShop jobShop = new JobShopLoader().Load("Examples/la19.in");
 
             var adamChromosome = new ScheduleChromosome(jobShop);
             var population = new Population(Config.MinPopulationSize, Config.MaxPopulationSize, adamChromosome);
