@@ -16,7 +16,8 @@
         /// </summary>
         public JobShop JobShop { get; private set; }
 
-        private DiGraph<Operation> graph;
+        internal DiGraph<Operation> Graph { get; private set; }
+        internal IReadOnlyList<Operation> TopologicalOrder { get; private set; }
 
         public double? ScheduleLength { get; set; }
 
@@ -52,36 +53,35 @@
             var scheduleChromosome = (ScheduleChromosome)base.Clone();
             scheduleChromosome.JobShop = this.JobShop;
             scheduleChromosome.ScheduleLength = this.ScheduleLength;
-            scheduleChromosome.graph = this.graph;
+            scheduleChromosome.Graph = this.Graph;
             return scheduleChromosome;
         }
 
-        public DiGraph<Operation> ToDirectedGraph()
+        /// <summary>
+        /// This method fixes the chromosome - there could be cycles before => this method removes the cycles
+        /// using graph.
+        /// </summary>
+        public void FixChromosome()
         {
-            // fitness is not null => cycles are fixed already => graph is correctly cached
-            // whenever some operation changes the element, fitness is reset
-            if (Fitness != null)
-            {
-                return this.graph;
-            }
-
             var graphHandler = new GraphHandler();
             var graph = graphHandler.CreateGraph(this);
-            var edgesThatChangedOrientation = graphHandler.BreakCycles(graph);
+            graphHandler.BreakCycles(graph);
 
-            // update chromosomes accordingly
-            foreach ((Operation Operation1, Operation Operation2) edge in edgesThatChangedOrientation)
+            // update the chromosome => get topologically sorted graph and rewrite values in machine indices
+            var topologicalOrder = graphHandler.GetTopologicalOrder(graph);
+            var machineIndices = new int[JobShop.MachinesCount];
+            var machineChromosomes = GetGenes().Select(x => x.Value).Cast<MachineChromosome>().ToList();
+            foreach (var operation in topologicalOrder.Where(x => x.Id > int.MinValue && x.Id < int.MaxValue))
             {
-                int machineId = edge.Operation1.MachineId;
-                var machineChromosome = (MachineChromosome)GetGene(machineId).Value;
+                int machineId = operation.MachineId;
+                ref int machineOperationIndex = ref machineIndices[machineId];
 
-                machineChromosome.SwitchEdgeOrientation(edge);
+                machineChromosomes[machineId].ReplaceGene(machineOperationIndex, new Gene(operation));
+                machineOperationIndex++;
             }
 
-
-            this.graph = graph;
-
-            return graph;
+            this.Graph = graph;
+            this.TopologicalOrder = topologicalOrder;
         }
 
         public string GetOperationStrings()

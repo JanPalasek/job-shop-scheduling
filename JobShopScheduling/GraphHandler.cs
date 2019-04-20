@@ -29,6 +29,11 @@
                     var operations = new List<Operation>();
                     for (int j = i + 1; j < machineOperations.Length; j++)
                     {
+                        // do not add operations on the same jobs (they have no reason)
+                        if (machineOperations[j].JobId == machineOperations[i].JobId)
+                        {
+                            continue;
+                        }
                         operations.Add(machineOperations[j]);
                     }
                     machineOperationsDictionary.Add(machineOperations[i], operations);
@@ -89,26 +94,23 @@
             return new CycleDetector<Operation>().HasCycle(graph);
         }
 
-        /// <summary>
-        /// Computes maximum cost in <see cref="graph"/> using topological sort.
-        /// </summary>
-        /// <param name="graph">Graph from which the maximum cost will be calculated. It needs to be acyclic.</param>
-        /// <returns></returns>
-        public double GetMaximumCost(DiGraph<Operation> graph)
+        public List<Operation> GetTopologicalOrder(DiGraph<Operation> graph)
         {
-            // topologically sort the graph => returns topologically sorted operations
-            var topologicallySortedOperations = new DepthFirstTopSort<Operation>().GetTopSort(graph);
+            return new DepthFirstTopSort<Operation>().GetTopSort(graph);
+        }
 
-            double[] highestOperationCosts = new double[topologicallySortedOperations.Count];
+        public double GetMaximumCost(DiGraph<Operation> graph, IReadOnlyList<Operation> topologicalOrder)
+        {
+            double[] highestOperationCosts = new double[topologicalOrder.Count];
 
             // find longest distance to i-th operation for every i
-            for (int i = 1; i < topologicallySortedOperations.Count; i++)
+            for (int i = 1; i < topologicalOrder.Count; i++)
             {
                 // check all edges to the i-th vertex
-                var operation = topologicallySortedOperations[i];
+                var operation = topologicalOrder[i];
                 for (int j = 0; j < i; j++)
                 {
-                    var otherOperation = topologicallySortedOperations[j];
+                    var otherOperation = topologicalOrder[j];
 
                     if (graph.HasEdge(otherOperation, operation))
                     {
@@ -119,6 +121,19 @@
             }
 
             return highestOperationCosts.Last();
+        }
+
+        /// <summary>
+        /// Computes maximum cost in <see cref="graph"/> using topological sort.
+        /// </summary>
+        /// <param name="graph">Graph from which the maximum cost will be calculated. It needs to be acyclic.</param>
+        /// <returns></returns>
+        public double GetMaximumCost(DiGraph<Operation> graph)
+        {
+            // topologically sort the graph => returns topologically sorted operations
+            var topologicallySortedOperations = new DepthFirstTopSort<Operation>().GetTopSort(graph);
+
+            return GetMaximumCost(graph, topologicallySortedOperations);
         }
     }
 }

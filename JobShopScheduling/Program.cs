@@ -24,7 +24,7 @@
 
             //JobShop jobShop = generator.Generate(Config.OperationCounts, Config.MachinesCount);
 
-            JobShop jobShop = new JobShopLoader().Load("Examples/la19.in");
+            JobShop jobShop = new JobShopLoader().Load("Examples/ft06.in");
 
             var adamChromosome = new ScheduleChromosome(jobShop);
             var population = new Population(Config.MinPopulationSize, Config.MaxPopulationSize, adamChromosome);
@@ -79,7 +79,7 @@
             Console.WriteLine($"Best schedule length: {bestChromosome.ScheduleLength:F}");
             var chromosomes = geneticAlgorithm.Population.CurrentGeneration.Chromosomes.Cast<ScheduleChromosome>();
             Console.WriteLine($"Average schedule length: {chromosomes.Average(x => x.ScheduleLength):F}");
-            //Console.WriteLine($"Population variance: {chromosomes.Variance(x => (decimal)x.ScheduleLength.Value):F}");
+            Console.WriteLine($"Population std deviation: {chromosomes.StandardDeviation(x => (decimal)x.ScheduleLength.Value):F}");
             Console.WriteLine($"Population size: {geneticAlgorithm.Population.CurrentGeneration.Chromosomes.Count}");
 
             //foreach (var chromosome in geneticAlgorithm.Population.CurrentGeneration.Chromosomes

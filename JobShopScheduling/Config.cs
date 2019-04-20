@@ -32,10 +32,10 @@
             MachinesCount = 10;
             GenerationsCount = 1000;
 
-            MutationProbability = 0.1f;
+            MutationProbability = 0.3f;
             CrossoverProbability = 0.75f;
             // mutate 4 times per solution
-            MutationPerBitProbability = 0.02f;
+            MutationPerBitProbability = 0.04f;
             ElitismPercent = 0.02f;
 
             TournamentSelectionProbability = 0.8f;

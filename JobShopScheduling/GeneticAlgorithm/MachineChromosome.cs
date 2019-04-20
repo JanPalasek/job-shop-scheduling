@@ -40,21 +40,6 @@
             return new MachineChromosome(GetGenes());
         }
 
-        /// <summary>
-        /// Updates chromosome based on edge
-        /// </summary>
-        /// <param name="edge"></param>
-        public void SwitchEdgeOrientation((Operation Operation1, Operation Operation2) edge)
-        {
-            var machineOperations = GetMachineOperations().ToList();
-
-            int operation1Index = machineOperations.IndexOf(edge.Operation1);
-            int operation2Index = machineOperations.IndexOf(edge.Operation2);
-
-            ReplaceGene(operation1Index, new Gene(edge.Operation2));
-            ReplaceGene(operation2Index, new Gene(edge.Operation1));
-        }
-
         public string GetOperationStrings()
         {
             StringBuilder sb = new StringBuilder();

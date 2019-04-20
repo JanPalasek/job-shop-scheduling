@@ -205,7 +205,7 @@
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e8" source="n3" target="n6">
+    <edge id="e8" source="n7" target="n3">
       <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
@@ -216,7 +216,7 @@
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e9" source="n7" target="n3">
+    <edge id="e9" source="n6" target="n3">
       <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
@@ -227,7 +227,7 @@
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e10" source="n5" target="n2">
+    <edge id="e10" source="n7" target="n1">
       <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
@@ -238,7 +238,7 @@
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e11" source="n1" target="n7">
+    <edge id="e11" source="n6" target="n1">
       <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
@@ -249,7 +249,7 @@
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e12" source="n1" target="n6">
+    <edge id="e12" source="n2" target="n5">
       <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>

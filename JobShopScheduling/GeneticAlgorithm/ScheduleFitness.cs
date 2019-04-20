@@ -21,9 +21,10 @@
             }
 
             // create graph
-            var graph = chromosome.ToDirectedGraph();
+            chromosome.FixChromosome();
+            var graph = chromosome.Graph;
 
-            double scheduleLength = new GraphHandler().GetMaximumCost(graph);
+            double scheduleLength = new GraphHandler().GetMaximumCost(graph, chromosome.TopologicalOrder);
             chromosome.ScheduleLength = scheduleLength;
             chromosome.Fitness = 1 / (scheduleLength + 1);
 

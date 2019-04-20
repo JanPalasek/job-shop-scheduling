@@ -12,7 +12,7 @@
             return enumerable.OrderBy(x => RandomizationProvider.Current.GetInt(0, int.MaxValue));
         }
 
-        public static decimal Variance<TType>(this IEnumerable<TType> enumerable, Func<TType, decimal> func)
+        public static double StandardDeviation<TType>(this IEnumerable<TType> enumerable, Func<TType, decimal> func)
         {
             enumerable = enumerable.ToList();
 
@@ -26,7 +26,7 @@
 
             decimal variance = sumValue / enumerable.Count();
 
-            return variance;
+            return Math.Sqrt((double)variance);
         }
     }
 }
