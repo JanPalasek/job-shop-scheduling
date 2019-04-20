@@ -30,11 +30,11 @@
 
                 if (chromosome1.Fitness > chromosome2.Fitness)
                 {
-                    chromosome = RandomizationProvider.Current.GetDouble() < probability ? chromosome1 : chromosome2;
+                    chromosome = RandomizationProvider.Current.GetDouble() <= probability ? chromosome1 : chromosome2;
                 }
                 else
                 {
-                    chromosome = RandomizationProvider.Current.GetDouble() < probability ? chromosome2 : chromosome1;
+                    chromosome = RandomizationProvider.Current.GetDouble() <= probability ? chromosome2 : chromosome1;
                 }
 
                 result.Add(chromosome);

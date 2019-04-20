@@ -5,6 +5,9 @@
     using System.Linq;
     using System.Text;
     using GeneticSharp.Domain.Chromosomes;
+    using Graph;
+    using JobShopStructures;
+    using Utils;
 
     public class MachineChromosome : ChromosomeBase
     {

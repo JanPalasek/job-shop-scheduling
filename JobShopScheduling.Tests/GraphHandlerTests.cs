@@ -7,6 +7,8 @@
     using GeneticAlgorithm;
     using GeneticSharp.Domain.Chromosomes;
     using GeneticSharp.Domain.Randomizations;
+    using Graph;
+    using JobShopStructures;
     using Moq;
     using NUnit.Framework;
 

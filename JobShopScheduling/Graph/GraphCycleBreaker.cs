@@ -1,11 +1,12 @@
-﻿namespace JobShopScheduling
+﻿namespace JobShopScheduling.Graph
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Advanced.Algorithms.DataStructures.Graph.AdjacencyList;
     using Advanced.Algorithms.Graph;
     using GeneticSharp.Domain.Randomizations;
+    using JobShopStructures;
+    using Utils;
 
     /// <summary>
     /// Component that is designed to break cycles of the graph. It changes orientation of edges so
@@ -55,7 +56,7 @@
                             {
                                 // if it is back edge => switch orientation of the edge with backEdgeBreakProbability
                                 if (operation1.Order > operation2.Order
-                                    && RandomizationProvider.Current.GetDouble() < backEdgeBreakProbability)
+                                    && RandomizationProvider.Current.GetDouble() <= backEdgeBreakProbability)
                                 {
                                     // switch edge orientation
                                     graph.RemoveEdge(operation1, operation2);
@@ -65,9 +66,9 @@
                                     goto cycleOut;
                                 }
 
-                                // if it isn't back edge => switch orientation of the edge with otherEdgeBreakProbability
+                                //// if it isn't back edge => switch orientation of the edge with otherEdgeBreakProbability
                                 if (operation1.Order <= operation2.Order
-                                         && RandomizationProvider.Current.GetDouble() < otherEdgeBreakProbability)
+                                         && RandomizationProvider.Current.GetDouble() <= otherEdgeBreakProbability)
                                 {
                                     // switch edge orientation
                                     graph.RemoveEdge(operation1, operation2);

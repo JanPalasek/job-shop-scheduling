@@ -1,4 +1,4 @@
-﻿namespace JobShopScheduling
+﻿namespace JobShopScheduling.Utils
 {
     using System;
 

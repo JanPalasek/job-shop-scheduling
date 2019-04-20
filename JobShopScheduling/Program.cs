@@ -1,96 +1,31 @@
 ﻿namespace JobShopScheduling
 {
-    using System;
-    using System.Linq;
-    using System.Reflection;
-    using Advanced.Algorithms.Graph;
-    using GeneticAlgorithm;
-    using GeneticSharp.Domain.Chromosomes;
-    using GeneticSharp.Domain.Fitnesses;
-    using GeneticSharp.Domain.Populations;
-    using GeneticSharp.Domain.Randomizations;
-    using GeneticSharp.Domain.Selections;
-    using GeneticSharp.Domain.Terminations;
-    using GeneticSharp.Infrastructure.Framework.Threading;
+    using JobShopStructures;
 
     internal class Program
     {
         private static void Main(string[] args)
         {
-            //var generator = new JobShopGenerator();
+            JobShop jobShop = LoadJobShop("Examples/la26.in");
 
-            //var random = new Random(42);
-            //((IRandomInjectable)generator).InjectRandom(random);
-
-            //JobShop jobShop = generator.Generate(Config.OperationCounts, Config.MachinesCount);
-
-            JobShop jobShop = new JobShopLoader().Load("Examples/ft06.in");
-
-            var adamChromosome = new ScheduleChromosome(jobShop);
-            var population = new Population(Config.MinPopulationSize, Config.MaxPopulationSize, adamChromosome);
-
-            var fitness = new ScheduleFitness();
-            var selection = new NonDeterministicTournamentSelection(Config.TournamentSelectionProbability);
-            var crossover = new SchedulesCrossover();
-            var mutation = new ScheduleMutation(Config.MutationPerBitProbability);
-            var geneticAlgorithm =
-                new GeneticSharp.Domain.GeneticAlgorithm(population, fitness, selection, crossover, mutation)
-                {
-                    Termination = new GenerationNumberTermination(Config.GenerationsCount),
-                    MutationProbability = Config.MutationProbability,
-                    CrossoverProbability = Config.CrossoverProbability,
-                    OperatorsStrategy = new JobShopOperatorStrategy(),
-                    Reinsertion = new JobShopReinsertion(
-                        new EliteSelection(), 
-                        new Elitism(Config.ElitismPercent),
-                        fitness
-                        )
-                };
-            //ScheduleChromosome bestChromosome = null;
-            geneticAlgorithm.GenerationRan += (sender, e) =>
-            {
-                Print(geneticAlgorithm);
-
-                //var chromosome = (ScheduleChromosome)geneticAlgorithm.BestChromosome;
-
-                //if (bestChromosome == null)
-                //{
-                //    bestChromosome = chromosome;
-                //}
-                //else if (chromosome.ScheduleLength > bestChromosome.ScheduleLength)
-                //{
-                //    Console.WriteLine("INCREASE IN BEST VALUE");
-                //}
-
-                //bestChromosome = chromosome;
-            };
-            //geneticAlgorithm.TaskExecutor = new ParallelTaskExecutor()
-            //{
-            //    MinThreads = 1,
-            //    MaxThreads = 4
-            //};
-            geneticAlgorithm.Start();
+            var jobShopGeneticAlgorithm = new JobShopGeneticAlgorithm(jobShop);
+            jobShopGeneticAlgorithm.Run();
         }
 
-        private static void Print(GeneticSharp.Domain.GeneticAlgorithm geneticAlgorithm)
+        private static JobShop GenerateJobShop()
         {
-            var bestChromosome = (ScheduleChromosome)geneticAlgorithm.BestChromosome;
-            Console.WriteLine($"Generation: {geneticAlgorithm.GenerationsNumber}");
-            Console.WriteLine($"Best schedule length: {bestChromosome.ScheduleLength:F}");
-            var chromosomes = geneticAlgorithm.Population.CurrentGeneration.Chromosomes.Cast<ScheduleChromosome>();
-            Console.WriteLine($"Average schedule length: {chromosomes.Average(x => x.ScheduleLength):F}");
-            Console.WriteLine($"Population std deviation: {chromosomes.StandardDeviation(x => (decimal)x.ScheduleLength.Value):F}");
-            Console.WriteLine($"Population size: {geneticAlgorithm.Population.CurrentGeneration.Chromosomes.Count}");
+            var generator = new JobShopGenerator();
 
-            //foreach (var chromosome in geneticAlgorithm.Population.CurrentGeneration.Chromosomes
-            //    .OrderBy(x => x.Fitness).Cast<ScheduleChromosome>())
-            //{
-            //    Console.WriteLine($"{chromosome.ScheduleLength:F}");
-            //    Console.WriteLine(chromosome.GetOperationStrings());
-            //}
+            JobShop jobShop = generator.Generate(Config.OperationCounts, Config.MachinesCount);
 
-            Console.WriteLine();
-            Console.WriteLine();
+            return jobShop;
+        }
+
+        private static JobShop LoadJobShop(string inputPath)
+        {
+            JobShop jobShop = new JobShopLoader().Load(inputPath);
+
+            return jobShop;
         }
     }
 }

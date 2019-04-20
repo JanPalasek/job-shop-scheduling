@@ -8,6 +8,9 @@
     using Advanced.Algorithms.DataStructures.Graph.AdjacencyList;
     using Advanced.Algorithms.Graph;
     using GeneticSharp.Domain.Chromosomes;
+    using Graph;
+    using JobShopStructures;
+    using Utils;
 
     public class ScheduleChromosome : ChromosomeBase
     {

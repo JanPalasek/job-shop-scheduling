@@ -1,9 +1,7 @@
-﻿namespace JobShopScheduling
+﻿namespace JobShopScheduling.JobShopStructures
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Advanced.Algorithms.DataStructures.Graph.AdjacencyList;
 
     /// <summary>
     /// Represents job shop task.

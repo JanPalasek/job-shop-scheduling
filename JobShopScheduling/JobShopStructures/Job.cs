@@ -1,4 +1,4 @@
-﻿namespace JobShopScheduling
+﻿namespace JobShopScheduling.JobShopStructures
 {
     using System.Collections.Generic;
 

@@ -5,6 +5,7 @@
     using Advanced.Algorithms.Graph;
     using GeneticSharp.Domain.Chromosomes;
     using GeneticSharp.Domain.Fitnesses;
+    using Graph;
 
     public class ScheduleFitness : IFitness
     {

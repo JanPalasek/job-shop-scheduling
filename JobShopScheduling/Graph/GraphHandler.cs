@@ -1,4 +1,4 @@
-﻿namespace JobShopScheduling
+﻿namespace JobShopScheduling.Graph
 {
     using System;
     using System.Collections.Generic;
@@ -6,6 +6,7 @@
     using Advanced.Algorithms.DataStructures.Graph.AdjacencyList;
     using Advanced.Algorithms.Graph;
     using GeneticAlgorithm;
+    using JobShopStructures;
 
     /// <summary>
     /// Component handling various operations on graphs.

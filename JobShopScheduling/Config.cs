@@ -24,7 +24,7 @@
         static Config()
         {
             MinPopulationSize = 100;
-            MaxPopulationSize = 110;
+            MaxPopulationSize = 105;
             OperationCounts = new int[]{
                 10, 10, 10, 10, 10, 10, 10, 10, 10, 10,
                 10, 10, 10, 10, 10, 10, 10, 10, 10, 10,
@@ -34,15 +34,15 @@
 
             MutationProbability = 0.3f;
             CrossoverProbability = 0.75f;
-            // mutate 4 times per solution
-            MutationPerBitProbability = 0.04f;
+            // mutate 2 times per solution
+            MutationPerBitProbability = 0.02f;
             ElitismPercent = 0.02f;
 
             TournamentSelectionProbability = 0.8f;
             ReinsertTournamentProbability = 0.7f;
 
-            BackEdgeSwitchOrientationProbability = 0.8f;
-            NormalEdgeSwitchOrientationProbability = 0.3f;
+            BackEdgeSwitchOrientationProbability = 0.95f;
+            NormalEdgeSwitchOrientationProbability = 0.05f;
         }
     }
 }

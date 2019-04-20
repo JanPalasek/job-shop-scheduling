@@ -1,9 +1,9 @@
-﻿namespace JobShopScheduling
+﻿namespace JobShopScheduling.JobShopStructures
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using GeneticSharp.Domain.Randomizations;
+    using JobShopScheduling.JobShopStructures;
+    using Utils;
 
     /// <summary>
     /// Component that can generate <see cref="JobShop"/>.

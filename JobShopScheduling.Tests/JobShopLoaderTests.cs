@@ -1,5 +1,7 @@
 ﻿namespace JobShopScheduling.Tests
 {
+    using Graph;
+    using JobShopStructures;
     using NUnit.Framework;
 
     [TestFixture]

@@ -26,7 +26,7 @@
                 // have some rest chromosomes.
                 if (selectedParents.Count == crossover.ParentsNumber)
                 {
-                    bool shouldCrossover = RandomizationProvider.Current.GetDouble() < crossoverProbability;
+                    bool shouldCrossover = RandomizationProvider.Current.GetDouble() <= crossoverProbability;
 
                     offspring.AddRange(shouldCrossover ?
                         crossover.Cross(selectedParents) : selectedParents);
