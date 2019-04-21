@@ -2,6 +2,9 @@
 {
     using System.Linq;
 
+    /// <summary>
+    /// Configuration class for the run.
+    /// </summary>
     public static class Config
     {
         public static int MinPopulationSize { get; }

@@ -90,16 +90,33 @@
             return edgesThatChangedOrientation;
         }
 
+        /// <summary>
+        /// Detects, whether the specified <see cref="graph"/> has cycles.
+        /// Returns true if it does, otherwise returns false.
+        /// </summary>
+        /// <param name="graph"></param>
+        /// <returns></returns>
         public bool HasCycles(DiGraph<Operation> graph)
         {
             return new CycleDetector<Operation>().HasCycle(graph);
         }
 
+        /// <summary>
+        /// Obtains topological order of <see cref="Operation"/>s from <see cref="graph"/>.
+        /// </summary>
+        /// <param name="graph"></param>
+        /// <returns></returns>
         public List<Operation> GetTopologicalOrder(DiGraph<Operation> graph)
         {
             return new DepthFirstTopSort<Operation>().GetTopSort(graph);
         }
 
+        /// <summary>
+        /// Computes cost of the most expensive path in the <see cref="graph"/>.
+        /// </summary>
+        /// <param name="graph"></param>
+        /// <param name="topologicalOrder"></param>
+        /// <returns></returns>
         public double GetMaximumCost(DiGraph<Operation> graph, IReadOnlyList<Operation> topologicalOrder)
         {
             double[] highestOperationCosts = new double[topologicalOrder.Count];

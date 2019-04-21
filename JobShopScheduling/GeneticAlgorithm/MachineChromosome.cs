@@ -9,6 +9,9 @@
     using JobShopStructures;
     using Utils;
 
+    /// <summary>
+    /// Machine chromosomes represents order of operations that need to be performed on this particular machine.
+    /// </summary>
     public class MachineChromosome : ChromosomeBase
     {
         public int RealLength { get; }
@@ -55,7 +58,7 @@
             return sb.ToString();
         }
 
-        private IEnumerable<Operation> GetMachineOperations()
+        public IEnumerable<Operation> GetMachineOperations()
         {
             return GetGenes().Select(x => x.Value).Cast<Operation>().Where(x => x != null);
         }

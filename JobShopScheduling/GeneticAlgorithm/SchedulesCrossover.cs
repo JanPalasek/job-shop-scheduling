@@ -7,17 +7,16 @@
 
     public class SchedulesCrossover : ICrossover
     {
-        private readonly ICrossover crossover;
+        private readonly ICrossover permutationCrossover;
 
         public bool IsOrdered { get; }
         public int ParentsNumber { get; }
         public int ChildrenNumber { get; }
         public int MinChromosomeLength { get; }
 
-        public SchedulesCrossover()
+        public SchedulesCrossover(ICrossover permutationCrossover)
         {
-            crossover = new PartiallyMappedCrossover();
-
+            this.permutationCrossover = permutationCrossover;
             IsOrdered = true;
             ParentsNumber = 2;
             ChildrenNumber = 2;
@@ -46,7 +45,7 @@
                     continue;
                 }
 
-                var result = crossover.Cross(new List<IChromosome>() { machine1, machine2 });
+                var result = permutationCrossover.Cross(new List<IChromosome>() { machine1, machine2 });
 
                 var child1 = (MachineChromosome)result[0];
                 var child2 = (MachineChromosome)result[1];

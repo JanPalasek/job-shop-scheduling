@@ -12,6 +12,9 @@
     using JobShopStructures;
     using Utils;
 
+    /// <summary>
+    /// Genetic algorithm individual representing a schedule.
+    /// </summary>
     public class ScheduleChromosome : ChromosomeBase
     {
         /// <summary>
@@ -66,6 +69,11 @@
         /// </summary>
         public void FixChromosome()
         {
+            if (Fitness != null)
+            {
+                return;
+            }
+
             var graphHandler = new GraphHandler();
             var graph = graphHandler.CreateGraph(this);
             graphHandler.BreakCycles(graph);

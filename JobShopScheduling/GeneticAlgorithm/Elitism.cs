@@ -8,6 +8,11 @@
     using GeneticSharp.Domain.Randomizations;
     using GeneticSharp.Domain.Reinsertions;
 
+    /// <summary>
+    /// This component performs the elitism.
+    /// It copies <see cref="elitistPercentage"/> chromosomes from previous generation
+    /// into the offspring.
+    /// </summary>
     public class Elitism : ReinsertionBase
     {
         private readonly float elitistPercentage;

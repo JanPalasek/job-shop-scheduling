@@ -8,6 +8,9 @@
     using GeneticSharp.Domain.Randomizations;
     using GeneticSharp.Domain.Selections;
 
+    /// <summary>
+    /// Represents non-deterministic tournament selection of size 2.
+    /// </summary>
     public class NonDeterministicTournamentSelection : ISelection
     {
         private readonly float probability;

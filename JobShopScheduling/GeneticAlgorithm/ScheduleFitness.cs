@@ -7,6 +7,12 @@
     using GeneticSharp.Domain.Fitnesses;
     using Graph;
 
+    /// <summary>
+    /// Computes fitness and the schedule length.
+    /// Schedule length is computed as the length of longest path
+    /// from source to target in the schedule graph representation.
+    /// Fitness is defined as 1 / (scheduleLength + 1).
+    /// </summary>
     public class ScheduleFitness : IFitness
     {
         public double Evaluate(IChromosome chromosome)

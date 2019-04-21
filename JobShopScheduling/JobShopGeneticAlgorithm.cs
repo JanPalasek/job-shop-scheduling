@@ -3,6 +3,7 @@
     using System;
     using System.Linq;
     using GeneticAlgorithm;
+    using GeneticSharp.Domain.Crossovers;
     using GeneticSharp.Domain.Populations;
     using GeneticSharp.Domain.Selections;
     using GeneticSharp.Domain.Terminations;
@@ -26,7 +27,7 @@
 
             var fitness = new ScheduleFitness();
             var selection = new NonDeterministicTournamentSelection(Config.TournamentSelectionProbability);
-            var crossover = new SchedulesCrossover();
+            var crossover = new SchedulesCrossover(new CycleCrossover());
             var mutation = new ScheduleMutation(Config.MutationPerBitProbability);
             var geneticAlgorithm =
                 new GeneticSharp.Domain.GeneticAlgorithm(population, fitness, selection, crossover, mutation)
@@ -41,7 +42,6 @@
                         fitness
                     )
                 };
-            //ScheduleChromosome bestChromosome = null;
             geneticAlgorithm.GenerationRan += (sender, e) =>
             {
                 Print(geneticAlgorithm.Population, geneticAlgorithm.TimeEvolving);

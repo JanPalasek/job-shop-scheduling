@@ -6,6 +6,9 @@
     using GeneticSharp.Domain.Mutations;
     using GeneticSharp.Domain.Randomizations;
 
+    /// <summary>
+    /// Performs mutation on the schedule individual.
+    /// </summary>
     public class ScheduleMutation : MutationBase
     {
         private readonly float mutationPerBitProbability;
@@ -17,6 +20,13 @@
             this.swapMutation = new TworsMutation();
         }
 
+        /// <summary>
+        /// With probability <see cref="probability"/> it mutates the individual.
+        /// The mutation swaps two genes of machine chromosome with probability <see cref="mutationPerBitProbability"/>.
+        /// This procedure is iterated as many times as there is machine chromosome genes.
+        /// </summary>
+        /// <param name="chromosome"></param>
+        /// <param name="probability"></param>
         protected override void PerformMutate(IChromosome chromosome, float probability)
         {
             PerformMutate((ScheduleChromosome)chromosome, probability);
