@@ -23,7 +23,27 @@ namespace JobShopScheduling
             this.jobShop = jobShop;
         }
 
-        public void Run()
+        public void Run(int iterationsCount, bool adaptive = true)
+        {
+            ScheduleChromosome bestChromosome = null;
+            for (int i = 0; i < iterationsCount; i++)
+            {
+                var chromosome = RunOnce(adaptive);
+
+                if (bestChromosome == null)
+                {
+                    bestChromosome = chromosome;
+                }
+                else
+                {
+                    bestChromosome = chromosome.Fitness > bestChromosome.Fitness ? chromosome : bestChromosome;
+                }
+
+                Console.WriteLine($"Best chromosome for all iterations: {bestChromosome.ScheduleLength}");
+            }
+        }
+
+        private ScheduleChromosome RunOnce(bool adaptive = true)
         {
             var adamChromosome = new ScheduleChromosome(jobShop);
             var population = new Population(Config.MinPopulationSize, Config.MaxPopulationSize, adamChromosome);
@@ -46,6 +66,10 @@ namespace JobShopScheduling
                     )
                 };
             var stopWatch = new Stopwatch();
+            if (adaptive)
+            {
+                geneticAlgorithm.GenerationRan += (sender, e) => AdaptMutationProbability(geneticAlgorithm);;
+            }
             geneticAlgorithm.GenerationRan += (sender, e) =>
             {
                 Print(geneticAlgorithm.Population, stopWatch.Elapsed);
@@ -58,8 +82,10 @@ namespace JobShopScheduling
             stopWatch.Start();
             geneticAlgorithm.Start();
             stopWatch.Stop();
-        }
 
+            return (ScheduleChromosome)geneticAlgorithm.BestChromosome;
+        }
+        
         private void Print(IPopulation population, TimeSpan totalTime)
         {
             var bestChromosome = (ScheduleChromosome)population.BestChromosome;
@@ -70,6 +96,36 @@ namespace JobShopScheduling
             Console.WriteLine($"Population std deviation: {chromosomes.StandardDeviation(x => (decimal)x.ScheduleLength.Value):F}");
             Console.WriteLine($"Time evolving: {totalTime.TotalSeconds:F}");
             Console.WriteLine();
+        }
+
+        private void AdaptMutationProbability(GeneticSharp.Domain.GeneticAlgorithm geneticAlgorithm)
+        {
+            var lastGenerations = geneticAlgorithm.Population.Generations.Take(10).ToList();
+
+            var bestChromosome = geneticAlgorithm.BestChromosome;
+
+            if (lastGenerations.Count < 10)
+            {
+                return;
+            }
+
+            bool haveSameFitness = lastGenerations.All(
+                x => Math.Abs(x.BestChromosome.Fitness.Value - bestChromosome.Fitness.Value) < float.Epsilon);
+
+            // all chromosomes have same fitness => increase mutation rate
+            if (haveSameFitness)
+            {
+                geneticAlgorithm.MutationProbability *= 1.01f;
+                geneticAlgorithm.MutationProbability =
+                    Math.Min(geneticAlgorithm.MutationProbability, Config.MaximumMutationProbability);
+            }
+            // otherwise decrease it if they don't have same fitness
+            else
+            {
+                geneticAlgorithm.MutationProbability /= 1.15f;
+                geneticAlgorithm.MutationProbability =
+                    Math.Max(geneticAlgorithm.MutationProbability, Config.MinimumMutationProbability);
+            }
         }
     }
 }

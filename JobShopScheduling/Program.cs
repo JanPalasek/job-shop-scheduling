@@ -6,11 +6,11 @@
     {
         private static void Main(string[] args)
         {
-            JobShop jobShop = LoadJobShop("Examples/la26.in");
+            JobShop jobShop = LoadJobShop("Examples/la19.in");
             //JobShop jobShop = GenerateJobShop();
 
             var jobShopGeneticAlgorithm = new JobShopGeneticAlgorithm(jobShop);
-            jobShopGeneticAlgorithm.Run();
+            jobShopGeneticAlgorithm.Run(10, adaptive: false);
         }
 
         private static JobShop GenerateJobShop()

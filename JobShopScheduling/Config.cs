@@ -14,10 +14,12 @@
         public static int GenerationsCount { get; }
 
         public static float MutationProbability { get; }
+        
+        public static float MinimumMutationProbability { get; }
+        public static float MaximumMutationProbability { get; }
         public static float CrossoverProbability { get; }
         public static float InversionMutationPerGeneProbability { get; }
         public static float TournamentSelectionProbability { get; }
-        public static float ReinsertTournamentProbability { get; }
         public static float ElitismPercent { get; }
 
         public static float BackEdgeSwitchOrientationProbability { get; }
@@ -39,7 +41,7 @@
             
             MinPopulationSize = 100;
             MaxPopulationSize = 100;
-            GenerationsCount = 2000;
+            GenerationsCount = 1000;
             
             #endregion
 
@@ -50,10 +52,16 @@
             ElitismPercent = 0.02f;
 
             TournamentSelectionProbability = 0.8f;
-            ReinsertTournamentProbability = 0.7f;
 
             BackEdgeSwitchOrientationProbability = 0.95f;
             NormalEdgeSwitchOrientationProbability = 0.05f;
+            
+            #region Adaptive
+
+            MinimumMutationProbability = 0.2f;
+            MaximumMutationProbability = 0.5f;
+
+            #endregion
         }
     }
 }

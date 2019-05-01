@@ -33,7 +33,7 @@
                     {
                         int machineId = int.Parse(lineArgs[order * 2]);
                         double cost = double.Parse(lineArgs[order * 2 + 1]);
-                        cost = Math.Abs(cost) < 10e-12 ? cost + 10e-6 : cost;
+                        cost = Math.Abs(cost) < double.Epsilon ? cost + 10e-6 : cost;
                         operations.Add(new Operation(operationId, jobId, machineId, order, cost));
                         operationId++;
                     }
