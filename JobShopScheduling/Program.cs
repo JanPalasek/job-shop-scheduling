@@ -6,7 +6,7 @@
     {
         private static void Main(string[] args)
         {
-            JobShop jobShop = LoadJobShop("Examples/la19.in");
+            JobShop jobShop = LoadJobShop("Examples/ft06.in");
             //JobShop jobShop = GenerateJobShop();
 
             var jobShopGeneticAlgorithm = new JobShopGeneticAlgorithm(jobShop);

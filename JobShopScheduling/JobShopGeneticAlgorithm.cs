@@ -25,10 +25,16 @@ namespace JobShopScheduling
 
         public void Run(int iterationsCount, bool adaptive = true)
         {
+            if (iterationsCount < 1)
+            {
+                return;
+            }
+            
             ScheduleChromosome bestChromosome = null;
             for (int i = 0; i < iterationsCount; i++)
             {
                 var chromosome = RunOnce(adaptive);
+                Console.WriteLine();
 
                 if (bestChromosome == null)
                 {
@@ -38,9 +44,8 @@ namespace JobShopScheduling
                 {
                     bestChromosome = chromosome.Fitness > bestChromosome.Fitness ? chromosome : bestChromosome;
                 }
-
-                Console.WriteLine($"Best chromosome for all iterations: {bestChromosome.ScheduleLength}");
             }
+            Console.WriteLine($"Best chromosome for all iterations: {bestChromosome.ScheduleLength}");
         }
 
         private ScheduleChromosome RunOnce(bool adaptive = true)
@@ -89,12 +94,12 @@ namespace JobShopScheduling
         private void Print(IPopulation population, TimeSpan totalTime)
         {
             var bestChromosome = (ScheduleChromosome)population.BestChromosome;
-            Console.WriteLine($"Generation: {population.GenerationsNumber}");
-            Console.WriteLine($"Best schedule length: {bestChromosome.ScheduleLength:F}");
+            Console.Write($"Generation: {population.GenerationsNumber}, ");
+            Console.Write($"Best schedule length: {bestChromosome.ScheduleLength:F}, ");
             var chromosomes = population.CurrentGeneration.Chromosomes.Cast<ScheduleChromosome>().ToList();
-            Console.WriteLine($"Average schedule length: {chromosomes.Average(x => x.ScheduleLength):F}");
-            Console.WriteLine($"Population std deviation: {chromosomes.StandardDeviation(x => (decimal)x.ScheduleLength.Value):F}");
-            Console.WriteLine($"Time evolving: {totalTime.TotalSeconds:F}");
+            Console.Write($"Average schedule length: {chromosomes.Average(x => x.ScheduleLength):F}, ");
+            Console.Write($"Population std deviation: {chromosomes.StandardDeviation(x => (decimal)x.ScheduleLength.Value):F}, ");
+            Console.Write($"Time evolving: {totalTime.TotalSeconds:F}");
             Console.WriteLine();
         }
 
