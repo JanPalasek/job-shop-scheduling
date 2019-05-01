@@ -6,7 +6,8 @@
     {
         private static void Main(string[] args)
         {
-            JobShop jobShop = LoadJobShop("Examples/la35.in");
+            JobShop jobShop = LoadJobShop("Examples/la26.in");
+            //JobShop jobShop = GenerateJobShop();
 
             var jobShopGeneticAlgorithm = new JobShopGeneticAlgorithm(jobShop);
             jobShopGeneticAlgorithm.Run();

@@ -14,17 +14,13 @@
     /// </summary>
     public class MachineChromosome : ChromosomeBase
     {
-        public int RealLength { get; }
-
-        public MachineChromosome(Operation[] operations) : base(operations.Length < 2 ? 2 : operations.Length)
+        public MachineChromosome(Operation[] operations) : base(operations.Length)
         {
-            RealLength = operations.Length;
             base.ReplaceGenes(0, operations.Select(x => new Gene(x)).ToArray());
         }
 
-        public MachineChromosome(Gene[] genes) : base(genes.Length < 2 ? 2 : genes.Length)
+        public MachineChromosome(Gene[] genes) : base(genes.Length)
         {
-            RealLength = genes.Length;
             base.ReplaceGenes(0, genes);
         }
 

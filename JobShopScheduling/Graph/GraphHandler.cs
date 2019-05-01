@@ -22,7 +22,7 @@
         {
             // dictionary mapping first operation to its successor
             var machineOperationsDictionary = new Dictionary<Operation, List<Operation>>();
-            foreach (var machineChromosome in chromosome.GetGenes().Select(x => x.Value).Cast<MachineChromosome>().Where(x => x.RealLength >= 2))
+            foreach (var machineChromosome in chromosome.GetGenes().Select(x => x.Value).Cast<MachineChromosome>().Where(x => x.Length >= 2))
             {
                 var machineOperations = machineChromosome.GetGenes().Select(x => x.Value).Cast<Operation>().ToArray();
                 for (int i = 0; i < machineOperations.Length; i++)

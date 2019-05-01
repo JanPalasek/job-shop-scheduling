@@ -40,7 +40,7 @@
                 var machine1 = (MachineChromosome)scheduleParent1.GetGene(i).Value;
                 var machine2 = (MachineChromosome)scheduleParent2.GetGene(i).Value;
 
-                if (machine1.RealLength < 3)
+                if (machine1.Length < 3)
                 {
                     continue;
                 }

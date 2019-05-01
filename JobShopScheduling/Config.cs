@@ -15,7 +15,7 @@
 
         public static float MutationProbability { get; }
         public static float CrossoverProbability { get; }
-        public static float MutationPerBitProbability { get; }
+        public static float InversionMutationPerGeneProbability { get; }
         public static float TournamentSelectionProbability { get; }
         public static float ReinsertTournamentProbability { get; }
         public static float ElitismPercent { get; }
@@ -26,19 +26,27 @@
 
         static Config()
         {
-            MinPopulationSize = 100;
-            MaxPopulationSize = 105;
+            #region Input for generator
+            
             OperationCounts = new int[]{
-                10, 10, 10, 10, 10, 10, 10, 10, 10, 10,
-                10, 10, 10, 10, 10, 10, 10, 10, 10, 10,
+                10, 10, 10, 10, 10, 10, 10, 10, 10
             };
             MachinesCount = 10;
-            GenerationsCount = 1000;
+            
+            #endregion
+            
+            #region Population parameters
+            
+            MinPopulationSize = 100;
+            MaxPopulationSize = 100;
+            GenerationsCount = 2000;
+            
+            #endregion
 
             MutationProbability = 0.3f;
             CrossoverProbability = 0.75f;
             // mutate 2 times per solution
-            MutationPerBitProbability = 0.02f;
+            InversionMutationPerGeneProbability = 0.5f / MachinesCount;
             ElitismPercent = 0.02f;
 
             TournamentSelectionProbability = 0.8f;

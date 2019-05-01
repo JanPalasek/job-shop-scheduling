@@ -1,4 +1,7 @@
-﻿namespace JobShopScheduling
+﻿using System.Diagnostics;
+using GeneticSharp.Domain.Mutations;
+
+namespace JobShopScheduling
 {
     using System;
     using System.Linq;
@@ -28,7 +31,7 @@
             var fitness = new ScheduleFitness();
             var selection = new NonDeterministicTournamentSelection(Config.TournamentSelectionProbability);
             var crossover = new SchedulesCrossover(new CycleCrossover());
-            var mutation = new ScheduleMutation(Config.MutationPerBitProbability);
+            var mutation = new ScheduleMutation(Config.InversionMutationPerGeneProbability, new ReverseSequenceMutation());
             var geneticAlgorithm =
                 new GeneticSharp.Domain.GeneticAlgorithm(population, fitness, selection, crossover, mutation)
                 {
@@ -42,16 +45,19 @@
                         fitness
                     )
                 };
+            var stopWatch = new Stopwatch();
             geneticAlgorithm.GenerationRan += (sender, e) =>
             {
-                Print(geneticAlgorithm.Population, geneticAlgorithm.TimeEvolving);
+                Print(geneticAlgorithm.Population, stopWatch.Elapsed);
             };
             geneticAlgorithm.TaskExecutor = new ParallelTaskExecutor()
             {
                 MinThreads = 1,
                 MaxThreads = Environment.ProcessorCount / 2
             };
+            stopWatch.Start();
             geneticAlgorithm.Start();
+            stopWatch.Stop();
         }
 
         private void Print(IPopulation population, TimeSpan totalTime)

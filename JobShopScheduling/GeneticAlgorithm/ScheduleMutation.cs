@@ -11,18 +11,18 @@
     /// </summary>
     public class ScheduleMutation : MutationBase
     {
-        private readonly float mutationPerBitProbability;
-        private readonly TworsMutation swapMutation;
+        private readonly float machineMutationProbability;
+        private readonly IMutation machineMutation;
 
-        public ScheduleMutation(float mutationPerBitProbability)
+        public ScheduleMutation(float machineMutationProbability, IMutation machineMutation)
         {
-            this.mutationPerBitProbability = mutationPerBitProbability;
-            this.swapMutation = new TworsMutation();
+            this.machineMutationProbability = machineMutationProbability;
+            this.machineMutation = machineMutation;
         }
 
         /// <summary>
         /// With probability <see cref="probability"/> it mutates the individual.
-        /// The mutation swaps two genes of machine chromosome with probability <see cref="mutationPerBitProbability"/>.
+        /// The mutation swaps two genes of machine chromosome with probability <see cref="machineMutationProbability"/>.
         /// This procedure is iterated as many times as there is machine chromosome genes.
         /// </summary>
         /// <param name="chromosome"></param>
@@ -39,16 +39,12 @@
                 // perform mutation by machines
                 foreach (var gene in chromosome.GetGenes())
                 {
-                    var machineChromosome = (MachineChromosome)gene.Value;
-                    for (int i = 0; i < machineChromosome.RealLength; i++)
+                    if (RandomizationProvider.Current.GetDouble() <= machineMutationProbability)
                     {
-                        if (RandomizationProvider.Current.GetDouble() <= mutationPerBitProbability)
-                        {
-                            // perform swap (maybe more times)
-                            swapMutation.Mutate((MachineChromosome)gene.Value, 1);
-                            chromosome.ScheduleLength = null;
-                            chromosome.Fitness = null;
-                        }
+                        // perform swap (maybe more times)
+                        machineMutation.Mutate((MachineChromosome) gene.Value, 1);
+                        chromosome.ScheduleLength = null;
+                        chromosome.Fitness = null;
                     }
                 }
             }
