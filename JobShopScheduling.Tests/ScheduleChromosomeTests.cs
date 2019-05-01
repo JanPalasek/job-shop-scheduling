@@ -36,7 +36,7 @@
         public void FixChromosomeTest()
         {
             var randomizationProviderMock = new Mock<IRandomization>();
-            randomizationProviderMock.Setup(x => x.GetDouble()).Returns(Config.BackEdgeSwitchOrientationProbability - 10e-6);
+            randomizationProviderMock.Setup(x => x.GetDouble()).Returns(Global.Config.BackEdgeSwitchOrientationProbability - 10e-6);
             // fix random sort order of AsShuffledEnumerable
             randomizationProviderMock.Setup(x => x.GetInt(0, int.MaxValue)).Returns(0);
             RandomizationProvider.Current = randomizationProviderMock.Object;

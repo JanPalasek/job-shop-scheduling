@@ -1,5 +1,9 @@
 ﻿using System.Diagnostics;
+using System.IO;
 using GeneticSharp.Domain.Mutations;
+using OxyPlot;
+using OxyPlot.Axes;
+using OxyPlot.Series;
 
 namespace JobShopScheduling
 {
@@ -14,26 +18,56 @@ namespace JobShopScheduling
     using JobShopStructures;
     using Utils;
 
+    /// <summary>
+    /// Component that handles genetic algorithm evaluation including plotting etc.
+    /// </summary>
     public class JobShopGeneticAlgorithm
     {
         private readonly JobShop jobShop;
+        private readonly int iterationsCount;
+        private readonly bool adaptive;
 
-        public JobShopGeneticAlgorithm(JobShop jobShop)
-        {
-            this.jobShop = jobShop;
-        }
+        /// <summary>
+        ///  Plot model (if you want to pass it instead of letting the component create it itself
+        /// </summary>
+        public PlotModel PlotModel { get; set; }
 
-        public void Run(int iterationsCount, bool adaptive = true)
+        
+        /// <summary>
+        /// Creates instance of <see cref="JobShopGeneticAlgorithm"/> from parameters.
+        /// </summary>
+        /// <param name="jobShop">Input.</param>
+        /// <param name="iterationsCount">How many times will the GA be run repeatedly.</param>
+        /// <param name="adaptive">True, if the algorithm should be adaptive.</param>
+        /// <exception cref="ArgumentException"></exception>
+        public JobShopGeneticAlgorithm(JobShop jobShop, int iterationsCount, bool adaptive = true)
         {
             if (iterationsCount < 1)
             {
-                return;
+                throw new ArgumentException();
             }
             
+            this.jobShop = jobShop;
+            this.iterationsCount = iterationsCount;
+            this.adaptive = adaptive;
+        }
+
+        public void Run()
+        {
             ScheduleChromosome bestChromosome = null;
             for (int i = 0; i < iterationsCount; i++)
             {
-                var chromosome = RunOnce(adaptive);
+                ScheduleChromosome chromosome;
+                if (PlotModel == null)
+                {
+                    chromosome = RunOnce();
+                }
+                else
+                {
+                    var lineSeries = new LineSeries();
+                    PlotModel.Series.Add(lineSeries);
+                    chromosome = RunOnce(lineSeries);
+                }
                 Console.WriteLine();
 
                 if (bestChromosome == null)
@@ -45,28 +79,29 @@ namespace JobShopScheduling
                     bestChromosome = chromosome.Fitness > bestChromosome.Fitness ? chromosome : bestChromosome;
                 }
             }
+            
             Console.WriteLine($"Best chromosome for all iterations: {bestChromosome.ScheduleLength}");
         }
 
-        private ScheduleChromosome RunOnce(bool adaptive = true)
+        private ScheduleChromosome RunOnce(LineSeries lineSeries = null)
         {
             var adamChromosome = new ScheduleChromosome(jobShop);
-            var population = new Population(Config.MinPopulationSize, Config.MaxPopulationSize, adamChromosome);
+            var population = new Population(Global.Config.MinPopulationSize, Global.Config.MaxPopulationSize, adamChromosome);
 
             var fitness = new ScheduleFitness();
-            var selection = new NonDeterministicTournamentSelection(Config.TournamentSelectionProbability);
+            var selection = new NonDeterministicTournamentSelection(Global.Config.TournamentSelectionProbability);
             var crossover = new SchedulesCrossover(new CycleCrossover());
-            var mutation = new ScheduleMutation(Config.InversionMutationPerGeneProbability, new ReverseSequenceMutation());
+            var mutation = new ScheduleMutation(Global.Config.InversionMutationPerGeneProbability, new ReverseSequenceMutation());
             var geneticAlgorithm =
                 new GeneticSharp.Domain.GeneticAlgorithm(population, fitness, selection, crossover, mutation)
                 {
-                    Termination = new GenerationNumberTermination(Config.GenerationsCount),
-                    MutationProbability = Config.MutationProbability,
-                    CrossoverProbability = Config.CrossoverProbability,
+                    Termination = new GenerationNumberTermination(Global.Config.GenerationsCount),
+                    MutationProbability = Global.Config.MutationProbability,
+                    CrossoverProbability = Global.Config.CrossoverProbability,
                     OperatorsStrategy = new JobShopOperatorStrategy(),
                     Reinsertion = new JobShopReinsertion(
                         new EliteSelection(),
-                        new Elitism(Config.ElitismPercent),
+                        new Elitism(Global.Config.ElitismPercent),
                         fitness
                     )
                 };
@@ -79,6 +114,17 @@ namespace JobShopScheduling
             {
                 Print(geneticAlgorithm.Population, stopWatch.Elapsed);
             };
+            
+            // plot the model
+            if (PlotModel != null)
+            {
+                geneticAlgorithm.GenerationRan += (sender, e) =>
+                {
+                    lineSeries.Points.Add(new DataPoint(geneticAlgorithm.Population.GenerationsNumber,
+                        ((ScheduleChromosome)geneticAlgorithm.Population.BestChromosome).ScheduleLength.Value));
+                };
+            }
+            
             geneticAlgorithm.TaskExecutor = new ParallelTaskExecutor()
             {
                 MinThreads = 1,
@@ -122,14 +168,14 @@ namespace JobShopScheduling
             {
                 geneticAlgorithm.MutationProbability *= 1.01f;
                 geneticAlgorithm.MutationProbability =
-                    Math.Min(geneticAlgorithm.MutationProbability, Config.MaximumMutationProbability);
+                    Math.Min(geneticAlgorithm.MutationProbability, Global.Config.MaximumMutationProbability);
             }
             // otherwise decrease it if they don't have same fitness
             else
             {
                 geneticAlgorithm.MutationProbability /= 1.15f;
                 geneticAlgorithm.MutationProbability =
-                    Math.Max(geneticAlgorithm.MutationProbability, Config.MinimumMutationProbability);
+                    Math.Max(geneticAlgorithm.MutationProbability, Global.Config.MinimumMutationProbability);
             }
         }
     }

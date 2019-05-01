@@ -5,63 +5,83 @@
     /// <summary>
     /// Configuration class for the run.
     /// </summary>
-    public static class Config
+    public class Config
     {
-        public static int MinPopulationSize { get; }
-        public static int MaxPopulationSize { get; }
-        public static int[] OperationCounts { get; }
-        public static int MachinesCount { get; }
-        public static int GenerationsCount { get; }
-
-        public static float MutationProbability { get; }
+        /// <summary>
+        /// Directory of file from which the input will be loaded.
+        /// </summary>
+        public string InputFileDirectoryPath { get; set; }
         
-        public static float MinimumMutationProbability { get; }
-        public static float MaximumMutationProbability { get; }
-        public static float CrossoverProbability { get; }
-        public static float InversionMutationPerGeneProbability { get; }
-        public static float TournamentSelectionProbability { get; }
-        public static float ElitismPercent { get; }
+        /// <summary>
+        /// Input file name that is supposed to be inside the <see cref="InputFileDirectoryPath"/>,
+        /// that will be loaded.
+        /// </summary>
+        public string InputFileName { get; set; }
+        
+        public int IterationsCount { get; set; }
+        public int MinPopulationSize { get; set; }
+        public int MaxPopulationSize { get; set; }
+        public int[] OperationCounts { get; set; }
+        public int MachinesCount { get; set; }
+        public int GenerationsCount { get; set; }
 
-        public static float BackEdgeSwitchOrientationProbability { get; }
-        public static float NormalEdgeSwitchOrientationProbability { get; }
+        public float MutationProbability { get; set; }
+        
+        public float MinimumMutationProbability { get; set; }
+        public float MaximumMutationProbability { get; set; }
+        public float CrossoverProbability { get; set; }
+        public float InversionMutationPerGeneProbability { get; set; }
+        public float TournamentSelectionProbability { get; set; }
+        public float ElitismPercent { get; set; }
+
+        public float BackEdgeSwitchOrientationProbability { get; set; }
+        public float NormalEdgeSwitchOrientationProbability { get; set; }
 
 
-        static Config()
+        public Config(bool initializeDefaultValues)
         {
-            #region Input for generator
+            if (initializeDefaultValues)
+            {
+                #region Input for generator
             
-            OperationCounts = new int[]{
-                10, 10, 10, 10, 10, 10, 10, 10, 10
-            };
-            MachinesCount = 10;
+                OperationCounts = new int[]{
+                    10, 10, 10, 10, 10, 10, 10, 10, 10
+                };
+                MachinesCount = 10;
             
-            #endregion
-            
-            #region Population parameters
-            
-            MinPopulationSize = 100;
-            MaxPopulationSize = 100;
-            GenerationsCount = 1000;
-            
-            #endregion
+                #endregion
 
-            MutationProbability = 0.3f;
-            CrossoverProbability = 0.75f;
-            // mutate 2 times per solution
-            InversionMutationPerGeneProbability = 0.5f / MachinesCount;
-            ElitismPercent = 0.02f;
-
-            TournamentSelectionProbability = 0.8f;
-
-            BackEdgeSwitchOrientationProbability = 0.95f;
-            NormalEdgeSwitchOrientationProbability = 0.05f;
+                InputFileDirectoryPath = "Examples";
+                InputFileName = "la19.in";
+                IterationsCount = 50;
             
-            #region Adaptive
+                #region GA parameters
+            
+                GenerationsCount = 1000;
+            
+                MinPopulationSize = 100;
+                MaxPopulationSize = 100;
+            
+                MutationProbability = 0.3f;
+                CrossoverProbability = 0.75f;
+                // mutate 2 times per solution
+                InversionMutationPerGeneProbability = 0.5f / MachinesCount;
+                ElitismPercent = 0.02f;
 
-            MinimumMutationProbability = 0.2f;
-            MaximumMutationProbability = 0.5f;
+                TournamentSelectionProbability = 0.8f;
 
-            #endregion
+                BackEdgeSwitchOrientationProbability = 0.95f;
+                NormalEdgeSwitchOrientationProbability = 0.05f;
+            
+                #endregion
+            
+                #region Adaptive
+
+                MinimumMutationProbability = 0.2f;
+                MaximumMutationProbability = 0.5f;
+
+                #endregion
+            }
         }
     }
 }
