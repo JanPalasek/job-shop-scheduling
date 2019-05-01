@@ -53,11 +53,11 @@
 
                 InputFileDirectoryPath = "Examples";
                 InputFileName = "la19.in";
-                IterationsCount = 50;
+                IterationsCount = 15;
             
                 #region GA parameters
             
-                GenerationsCount = 1000;
+                GenerationsCount = 500;
             
                 MinPopulationSize = 100;
                 MaxPopulationSize = 100;

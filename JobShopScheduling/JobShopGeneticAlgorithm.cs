@@ -57,6 +57,7 @@ namespace JobShopScheduling
             ScheduleChromosome bestChromosome = null;
             for (int i = 0; i < iterationsCount; i++)
             {
+                Console.WriteLine($"Iteration: {i}");
                 ScheduleChromosome chromosome;
                 if (PlotModel == null)
                 {

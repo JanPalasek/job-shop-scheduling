@@ -83,7 +83,7 @@ namespace JobShopScheduling
         public PlotModel CreatePlotModel()
         {
             var plotModel = new PlotModel();
-            plotModel.Axes.Add(new LinearAxis() { Position = AxisPosition.Left, Title = "Schedule length"});
+            plotModel.Axes.Add(new LinearAxis() { Position = AxisPosition.Left, Title = "Schedule length" });
             plotModel.Axes.Add(new LogarithmicAxis() { Position = AxisPosition.Bottom, Title = "Generation" });
             return plotModel;
         }
