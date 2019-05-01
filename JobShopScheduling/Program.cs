@@ -16,10 +16,11 @@ namespace JobShopScheduling
             
             JobShop jobShop = LoadJobShop(inputPath);
             //JobShop jobShop = GenerateJobShop();
+            Global.Config.InversionMutationPerGeneProbability = 0.5f / jobShop.MachinesCount;
             
             var plottingUtils = new PlottingHelper();
 
-            var gaAdaptive = new JobShopGeneticAlgorithm(jobShop, iterationsCount, true)
+            var gaAdaptive = new JobShopGeneticAlgorithm(jobShop, iterationsCount, adaptive: true)
             {
                 PlotModel = plottingUtils.CreatePlotModel()
             };
@@ -27,7 +28,7 @@ namespace JobShopScheduling
             var adaptiveSeries = plottingUtils.AverageY(gaAdaptive.PlotModel.Series.OfType<LineSeries>());
             adaptiveSeries.Title = "Adaptive";
             
-            var gaNonAdaptive = new JobShopGeneticAlgorithm(jobShop, iterationsCount)
+            var gaNonAdaptive = new JobShopGeneticAlgorithm(jobShop, iterationsCount, adaptive: false)
             {
                 PlotModel = plottingUtils.CreatePlotModel()
             };
