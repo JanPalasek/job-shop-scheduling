@@ -65,7 +65,7 @@
                 MutationProbability = 0.3f;
                 CrossoverProbability = 0.75f;
                 // mutate 2 times per solution
-                InversionMutationPerGeneProbability = 0.5f / MachinesCount;
+                InversionMutationPerGeneProbability = 0.05f;
                 ElitismPercent = 0.02f;
 
                 TournamentSelectionProbability = 0.8f;

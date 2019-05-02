@@ -23,7 +23,6 @@ namespace JobShopScheduling
 
             JobShop jobShop = LoadJobShop(inputPath);
             //JobShop jobShop = GenerateJobShop();
-            Global.Config.InversionMutationPerGeneProbability = 0.5f / jobShop.MachinesCount;
             
             var plottingUtils = new PlottingHelper();
 
