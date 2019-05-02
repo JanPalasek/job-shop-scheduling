@@ -71,7 +71,7 @@ namespace JobShopScheduling
         {
             using (var stream = File.Create($"{exportFilePath}.svg"))
             {
-                var exporter = new SvgExporter { Width = 600, Height = 400 };
+                var exporter = new SvgExporter { Width = 600, Height = 600 };
                 exporter.Export(plotModel, stream);
             }
         }

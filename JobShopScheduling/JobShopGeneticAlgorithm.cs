@@ -16,6 +16,7 @@ namespace JobShopScheduling
     using GeneticSharp.Domain.Terminations;
     using GeneticSharp.Infrastructure.Framework.Threading;
     using JobShopStructures;
+    using Serilog;
     using Utils;
 
     /// <summary>
@@ -25,6 +26,7 @@ namespace JobShopScheduling
     {
         private readonly JobShop jobShop;
         private readonly int iterationsCount;
+        private readonly ILogger logger;
         private readonly bool adaptive;
 
         /// <summary>
@@ -32,15 +34,16 @@ namespace JobShopScheduling
         /// </summary>
         public PlotModel PlotModel { get; set; }
 
-        
+
         /// <summary>
         /// Creates instance of <see cref="JobShopGeneticAlgorithm"/> from parameters.
         /// </summary>
         /// <param name="jobShop">Input.</param>
         /// <param name="iterationsCount">How many times will the GA be run repeatedly.</param>
+        /// <param name="logger">Logger.</param>
         /// <param name="adaptive">True, if the algorithm should be adaptive.</param>
         /// <exception cref="ArgumentException"></exception>
-        public JobShopGeneticAlgorithm(JobShop jobShop, int iterationsCount, bool adaptive = true)
+        public JobShopGeneticAlgorithm(JobShop jobShop, int iterationsCount, ILogger logger, bool adaptive = true)
         {
             if (iterationsCount < 1)
             {
@@ -49,15 +52,20 @@ namespace JobShopScheduling
             
             this.jobShop = jobShop;
             this.iterationsCount = iterationsCount;
+            this.logger = logger;
             this.adaptive = adaptive;
         }
 
         public void Run()
         {
+            logger.Information($"GA started");
+            logger.Information($"Population: {Global.Config.MinPopulationSize}");
+            logger.Information($"Adaptive: {adaptive}");
+
             ScheduleChromosome bestChromosome = null;
             for (int i = 0; i < iterationsCount; i++)
             {
-                Console.WriteLine($"Iteration: {i}");
+                logger.Information($"Iteration: {i}");
                 ScheduleChromosome chromosome;
                 if (PlotModel == null)
                 {
@@ -69,7 +77,7 @@ namespace JobShopScheduling
                     PlotModel.Series.Add(lineSeries);
                     chromosome = RunOnce(lineSeries);
                 }
-                Console.WriteLine();
+                logger.Information(string.Empty);
 
                 if (bestChromosome == null)
                 {
@@ -80,8 +88,8 @@ namespace JobShopScheduling
                     bestChromosome = chromosome.Fitness > bestChromosome.Fitness ? chromosome : bestChromosome;
                 }
             }
-            
-            Console.WriteLine($"Best chromosome for all iterations: {bestChromosome.ScheduleLength}");
+
+            logger.Information($"Best chromosome for all iterations: {bestChromosome.ScheduleLength}");
         }
 
         private ScheduleChromosome RunOnce(LineSeries lineSeries = null)
@@ -141,13 +149,13 @@ namespace JobShopScheduling
         private void Print(IPopulation population, TimeSpan totalTime)
         {
             var bestChromosome = (ScheduleChromosome)population.BestChromosome;
-            Console.Write($"Generation: {population.GenerationsNumber}, ");
-            Console.Write($"Best schedule length: {bestChromosome.ScheduleLength:F}, ");
+            logger.Information($"Generation: {population.GenerationsNumber}");
+            logger.Information($"Best schedule length: {bestChromosome.ScheduleLength:F}");
             var chromosomes = population.CurrentGeneration.Chromosomes.Cast<ScheduleChromosome>().ToList();
-            Console.Write($"Average schedule length: {chromosomes.Average(x => x.ScheduleLength):F}, ");
-            Console.Write($"Population std deviation: {chromosomes.StandardDeviation(x => (decimal)x.ScheduleLength.Value):F}, ");
-            Console.Write($"Time evolving: {totalTime.TotalSeconds:F}");
-            Console.WriteLine();
+            logger.Information($"Average schedule length: {chromosomes.Average(x => x.ScheduleLength):F}");
+            logger.Information($"Population std deviation: {chromosomes.StandardDeviation(x => (decimal)x.ScheduleLength.Value):F}");
+            logger.Information($"Time evolving: {totalTime.TotalSeconds:F}");
+            logger.Information(string.Empty);
         }
 
         private void AdaptMutationProbability(GeneticSharp.Domain.GeneticAlgorithm geneticAlgorithm)
