@@ -11,6 +11,11 @@ namespace JobShopScheduling
     {
         private static void Main(string[] args)
         {
+            if (args.Length > 0)
+            {
+                Global.Config.InputFileName = args[0];
+            }
+
             string inputName = Global.Config.InputFileName;
             string inputPath = $"{Global.Config.InputFileDirectoryPath}/{inputName}";
             int iterationsCount = Global.Config.IterationsCount;
