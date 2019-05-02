@@ -27,33 +27,24 @@ namespace JobShopScheduling
             
             var plottingUtils = new PlottingHelper();
 
-            var gaAdaptive = new JobShopGeneticAlgorithm(jobShop, iterationsCount, logger: new LoggerConfiguration()
-                .MinimumLevel.Information()
-                .WriteTo.Console()
-                .WriteTo.File($"{inputName}_ada.log")
-                .CreateLogger(), adaptive: true)
+            var gaAdaptive = new JobShopGeneticAlgorithm(jobShop, iterationsCount, logger: Log.Logger, adaptive: true)
             {
                 PlotModel = plottingUtils.CreatePlotModel()
             };
             gaAdaptive.Run();
             var adaptiveSeries = plottingUtils.AverageY(gaAdaptive.PlotModel.Series.OfType<LineSeries>());
             adaptiveSeries.Title = "Adaptive";
-            plottingUtils.ExportPlotModelToSvg($"{inputName}_ada", gaAdaptive.PlotModel);
 
-            var gaNonAdaptive = new JobShopGeneticAlgorithm(jobShop, iterationsCount, logger: new LoggerConfiguration()
-                .MinimumLevel.Information()
-                .WriteTo.Console()
-                .WriteTo.File($"{inputName}_basic.log")
-                .CreateLogger(), adaptive: false)
+            var gaNonAdaptive = new JobShopGeneticAlgorithm(jobShop, iterationsCount, logger: Log.Logger, adaptive: false)
             {
                 PlotModel = plottingUtils.CreatePlotModel()
             };
             gaNonAdaptive.Run();
             var nonAdaptiveSeries = plottingUtils.AverageY(gaNonAdaptive.PlotModel.Series.OfType<LineSeries>());
             nonAdaptiveSeries.Title = "Basic";
-            plottingUtils.ExportPlotModelToSvg($"{inputName}_basic", gaNonAdaptive.PlotModel);
 
             var plotModel = plottingUtils.CreatePlotModel();
+            plotModel.Title = inputName;
             plotModel.Series.Add(adaptiveSeries);
             plotModel.Series.Add(nonAdaptiveSeries);
             
