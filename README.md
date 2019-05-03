@@ -18,7 +18,7 @@ For genetic algorithm evaluation:
 - [GeneticSharp](https://github.com/giacomelli/GeneticSharp)
 - [AdvancedAlgorithms](https://github.com/justcoding121/Advanced-Algorithms)
 
-For other needs:
+Others:
 - [NUnit](https://github.com/nunit)
 - [OxyPlot](https://github.com/oxyplot/oxyplot)
 - [Serilog](https://github.com/serilog/serilog)
