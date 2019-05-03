@@ -1,4 +1,6 @@
-﻿namespace JobShopScheduling.GeneticAlgorithm
+﻿using System.Threading.Tasks;
+
+namespace JobShopScheduling.GeneticAlgorithm
 {
     using System;
     using System.Collections.Generic;
@@ -27,10 +29,9 @@
             IList<IChromosome> offspring, IList<IChromosome> parents)
         {
             // evaluate fitness of all
-            foreach (IChromosome chromosome in offspring.Concat(parents))
-            {
-                fitness.Evaluate(chromosome);
-            }
+            Parallel.ForEach(offspring.Concat(parents),
+                new ParallelOptions() { MaxDegreeOfParallelism = Global.Config.ThreadsCount },
+                x => fitness.Evaluate(x));
 
             IList<IChromosome> resultOffspring;
             // if not enough offsprings => take from parents

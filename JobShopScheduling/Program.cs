@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using CommandLine;
 using OxyPlot;
 using OxyPlot.Series;
 
@@ -11,10 +13,7 @@ namespace JobShopScheduling
     {
         private static void Main(string[] args)
         {
-            if (args.Length > 0)
-            {
-                Global.Config.InputFileName = args[0];
-            }
+            ParseCmdArguments(args);
 
             string inputName = Global.Config.InputFileName;
             string inputPath = $"{Global.Config.InputFileDirectoryPath}/{inputName}";
@@ -55,6 +54,42 @@ namespace JobShopScheduling
             plottingUtils.ExportPlotModelToSvg(inputName, plotModel);
         }
 
+        /// <summary>
+        /// Parses command-line arguments, storing info from them into <see cref="Global.Config"/>.
+        /// </summary>
+        /// <param name="cmdArgs"></param>
+        private static void ParseCmdArguments(string[] cmdArgs)
+        {
+            Parser.Default.ParseArguments<Options>(cmdArgs)
+                .WithParsed(o =>
+                {
+                    if (!string.IsNullOrEmpty(o.InputFileDirectoryPath))
+                    {
+                        Global.Config.InputFileDirectoryPath = o.InputFileDirectoryPath;
+                    }
+                    
+                    if (!string.IsNullOrEmpty(o.InputFileName))
+                    {
+                        Global.Config.InputFileName = o.InputFileName;
+                    }
+
+                    if (o.ThreadsCount != null)
+                    {
+                        Global.Config.ThreadsCount = o.ThreadsCount.Value;
+                    }
+                    
+                    if (o.IterationsCount != null)
+                    {
+                        Global.Config.IterationsCount = o.IterationsCount.Value;
+                    }
+                    
+                    if (o.GenerationsCount != null)
+                    {
+                        Global.Config.GenerationsCount = o.GenerationsCount.Value;
+                    }
+                });
+        }
+        
         private static JobShop GenerateJobShop()
         {
             var generator = new JobShopGenerator();
@@ -64,6 +99,11 @@ namespace JobShopScheduling
             return jobShop;
         }
 
+        /// <summary>
+        /// Loads <see cref="JobShop"/> from specified input path.
+        /// </summary>
+        /// <param name="inputPath"></param>
+        /// <returns></returns>
         private static JobShop LoadJobShop(string inputPath)
         {
             JobShop jobShop = new JobShopLoader().Load(inputPath);

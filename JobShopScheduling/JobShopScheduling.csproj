@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Advanced.Algorithms" Version="0.0.434-beta" />
+    <PackageReference Include="CommandLineParser" Version="2.5.0" />
     <PackageReference Include="GeneticSharp" Version="2.5.1" />
     <PackageReference Include="OxyPlot.Core" Version="2.0.0-unstable1035" />
     <PackageReference Include="Serilog" Version="2.8.0" />

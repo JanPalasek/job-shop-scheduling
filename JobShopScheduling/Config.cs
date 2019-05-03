@@ -1,4 +1,6 @@
-﻿namespace JobShopScheduling
+﻿using System;
+
+namespace JobShopScheduling
 {
     using System.Linq;
 
@@ -19,6 +21,8 @@
         public string InputFileName { get; set; }
         
         public int IterationsCount { get; set; }
+        
+        public int ThreadsCount { get; set; }
         public int MinPopulationSize { get; set; }
         public int MaxPopulationSize { get; set; }
         public int[] OperationCounts { get; set; }
@@ -54,6 +58,7 @@
                 InputFileDirectoryPath = "Examples";
                 InputFileName = "la19.in";
                 IterationsCount = 10;
+                ThreadsCount = Environment.ProcessorCount / 2;
             
                 #region GA parameters
             

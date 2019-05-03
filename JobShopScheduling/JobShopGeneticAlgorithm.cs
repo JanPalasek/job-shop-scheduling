@@ -137,7 +137,7 @@ namespace JobShopScheduling
             geneticAlgorithm.TaskExecutor = new ParallelTaskExecutor()
             {
                 MinThreads = 1,
-                MaxThreads = Environment.ProcessorCount / 2
+                MaxThreads = Global.Config.ThreadsCount
             };
             stopWatch.Start();
             geneticAlgorithm.Start();
