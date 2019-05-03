@@ -2,13 +2,13 @@
 This repository is an implementation of job-shop scheduling problem using C#.
 
 ## Command-line arguments:
-- Name of input file (file from which the job shop input will be loaded) = *-f* or *--file*
-- Path to input directory = *-d* or *--dir*
-- Number of threads that will be used = *-t* or *--threads*
-- Number of generations of GA = *-g* or *--gen*
-- Number of iterations of GA = *-i* or *--it*
+- Name of input file (file from which the job shop input will be loaded) = *-f* or *--file* (required)
+- Path to input directory = *-d* or *--dir* (optional)
+- Number of threads that will be used = *-t* or *--threads* (optional)
+- Number of generations of GA = *-g* or *--gen* (optional)
+- Number of iterations of GA = *-i* or *--it* (optional)
 
-Note that all these arguments are optional. If not specified, default value defined in *Config* class will be used.
+If value for optional argument is not specified, default value defined in *Config* class will be used.
 
 Example:
 ```
