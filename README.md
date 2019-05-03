@@ -8,6 +8,8 @@ This repository is an implementation of job-shop scheduling problem using C#.
 - Number of generations of GA = *-g* or *--gen*
 - Number of iterations of GA = *-i* or *--it*
 
+Note that all these arguments are optional. If not specified, default value defined in *Config* class will be used.
+
 Example:
 ```
 dotnet JobShopScheduling.dll -d "Examples" --file="la19.in" --threads=4
