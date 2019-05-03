@@ -11,15 +11,9 @@ namespace JobShopScheduling
     public class Config
     {
         /// <summary>
-        /// Directory of file from which the input will be loaded.
+        /// Input file path.
         /// </summary>
-        public string InputFileDirectoryPath { get; set; }
-        
-        /// <summary>
-        /// Input file name that is supposed to be inside the <see cref="InputFileDirectoryPath"/>,
-        /// that will be loaded.
-        /// </summary>
-        public string InputFileName { get; set; }
+        public string InputFilePath { get; set; }
         
         public int IterationsCount { get; set; }
         
@@ -56,7 +50,6 @@ namespace JobShopScheduling
             
                 #endregion
 
-                InputFileDirectoryPath = "Examples";
                 IterationsCount = 10;
                 ThreadsCount = Environment.ProcessorCount / 2;
             
@@ -93,8 +86,7 @@ namespace JobShopScheduling
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.AppendLine($"Input file directory path: {InputFileDirectoryPath}");
-            sb.AppendLine($"Input file name: {InputFileName}");
+            sb.AppendLine($"Input file path: {InputFilePath}");
             sb.AppendLine($"Iterations count: {IterationsCount}");
             sb.AppendLine($"Generations count: {GenerationsCount}");
             sb.AppendLine($"Threads count: {ThreadsCount}");

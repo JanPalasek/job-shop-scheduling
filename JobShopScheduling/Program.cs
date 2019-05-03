@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using CommandLine;
 using OxyPlot;
@@ -15,8 +16,8 @@ namespace JobShopScheduling
         {
             ParseCmdArguments(args);
 
-            string inputName = Global.Config.InputFileName;
-            string inputPath = $"{Global.Config.InputFileDirectoryPath}/{inputName}";
+            string inputPath = Global.Config.InputFilePath;
+            string inputName = Path.GetFileName(inputPath);
             int iterationsCount = Global.Config.IterationsCount;
 
             Log.Logger = new LoggerConfiguration()
@@ -66,12 +67,7 @@ namespace JobShopScheduling
             Parser.Default.ParseArguments<CommandLineOptions>(cmdArgs)
                 .WithParsed(o =>
                 {
-                    Global.Config.InputFileName = o.InputFileName;
-
-                    if (!string.IsNullOrEmpty(o.InputFileDirectoryPath))
-                    {
-                        Global.Config.InputFileDirectoryPath = o.InputFileDirectoryPath;
-                    }
+                    Global.Config.InputFilePath = o.InputFilePath;
 
                     if (o.ThreadsCount != null)
                     {

@@ -7,11 +7,8 @@ namespace JobShopScheduling
     /// </summary>
     public class CommandLineOptions
     {
-        [Option('f', "file", Required = true, HelpText = "Name of input file.")]
-        public string InputFileName { get; set; }
-            
-        [Option('d', "dir", Required = false, HelpText = "Directory of the input file.")]
-        public string InputFileDirectoryPath { get; set; }
+        [Option('f', "file", Required = true, HelpText = "Path to the input file.")]
+        public string InputFilePath { get; set; }
             
         [Option('t', "threads", Required = false, HelpText = "Number of threads that will be used.")]
         public int? ThreadsCount { get; set; }
