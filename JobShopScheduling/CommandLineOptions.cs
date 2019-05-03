@@ -7,7 +7,7 @@ namespace JobShopScheduling
     /// </summary>
     public class CommandLineOptions
     {
-        [Option('f', "file", Required = false, HelpText = "Name of input file.")]
+        [Option('f', "file", Required = true, HelpText = "Name of input file.")]
         public string InputFileName { get; set; }
             
         [Option('d', "dir", Required = false, HelpText = "Directory of the input file.")]

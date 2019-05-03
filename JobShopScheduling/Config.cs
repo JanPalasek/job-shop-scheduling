@@ -57,7 +57,6 @@ namespace JobShopScheduling
                 #endregion
 
                 InputFileDirectoryPath = "Examples";
-                InputFileName = "la19.in";
                 IterationsCount = 10;
                 ThreadsCount = Environment.ProcessorCount / 2;
             

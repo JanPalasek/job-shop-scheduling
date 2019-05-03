@@ -66,14 +66,11 @@ namespace JobShopScheduling
             Parser.Default.ParseArguments<CommandLineOptions>(cmdArgs)
                 .WithParsed(o =>
                 {
+                    Global.Config.InputFileName = o.InputFileName;
+
                     if (!string.IsNullOrEmpty(o.InputFileDirectoryPath))
                     {
                         Global.Config.InputFileDirectoryPath = o.InputFileDirectoryPath;
-                    }
-                    
-                    if (!string.IsNullOrEmpty(o.InputFileName))
-                    {
-                        Global.Config.InputFileName = o.InputFileName;
                     }
 
                     if (o.ThreadsCount != null)
@@ -89,6 +86,13 @@ namespace JobShopScheduling
                     if (o.GenerationsCount != null)
                     {
                         Global.Config.GenerationsCount = o.GenerationsCount.Value;
+                    }
+                })
+                .WithNotParsed(o =>
+                {
+                    if (o.Any())
+                    {
+                        throw new ArgumentException("Error in command-line arguments.");
                     }
                 });
         }
