@@ -25,6 +25,9 @@ namespace JobShopScheduling
                 .WriteTo.File($"{inputName}.log")
                 .CreateLogger();
 
+            Log.Information("CONFIG PARAMETERS");
+            Log.Information(Global.Config.ToString());
+
             JobShop jobShop = LoadJobShop(inputPath);
             //JobShop jobShop = GenerateJobShop();
             
@@ -60,7 +63,7 @@ namespace JobShopScheduling
         /// <param name="cmdArgs"></param>
         private static void ParseCmdArguments(string[] cmdArgs)
         {
-            Parser.Default.ParseArguments<Options>(cmdArgs)
+            Parser.Default.ParseArguments<CommandLineOptions>(cmdArgs)
                 .WithParsed(o =>
                 {
                     if (!string.IsNullOrEmpty(o.InputFileDirectoryPath))

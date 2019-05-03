@@ -59,13 +59,12 @@ namespace JobShopScheduling
         public void Run()
         {
             logger.Information($"GA started");
-            logger.Information($"Population: {Global.Config.MinPopulationSize}");
             logger.Information($"Adaptive: {adaptive}");
 
             ScheduleChromosome bestChromosome = null;
             for (int i = 0; i < iterationsCount; i++)
             {
-                logger.Information($"Iteration: {i}");
+                logger.Information($"Iteration: {i + 1}");
                 ScheduleChromosome chromosome;
                 if (PlotModel == null)
                 {
@@ -100,7 +99,7 @@ namespace JobShopScheduling
             var fitness = new ScheduleFitness();
             var selection = new NonDeterministicTournamentSelection(Global.Config.TournamentSelectionProbability);
             var crossover = new SchedulesCrossover(new CycleCrossover());
-            var mutation = new ScheduleMutation(Global.Config.InversionMutationPerGeneProbability, new ReverseSequenceMutation());
+            var mutation = new ScheduleMutation(Global.Config.MutationPerGeneProbability, new ReverseSequenceMutation());
             var geneticAlgorithm =
                 new GeneticSharp.Domain.GeneticAlgorithm(population, fitness, selection, crossover, mutation)
                 {

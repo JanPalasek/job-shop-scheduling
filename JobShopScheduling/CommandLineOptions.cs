@@ -2,7 +2,10 @@ using CommandLine;
 
 namespace JobShopScheduling
 {
-    public class Options
+    /// <summary>
+    /// Options from command line.
+    /// </summary>
+    public class CommandLineOptions
     {
         [Option('f', "file", Required = false, HelpText = "Name of input file.")]
         public string InputFileName { get; set; }

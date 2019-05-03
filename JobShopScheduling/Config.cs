@@ -3,6 +3,7 @@
 namespace JobShopScheduling
 {
     using System.Linq;
+    using System.Text;
 
     /// <summary>
     /// Configuration class for the run.
@@ -34,7 +35,7 @@ namespace JobShopScheduling
         public float MinimumMutationProbability { get; set; }
         public float MaximumMutationProbability { get; set; }
         public float CrossoverProbability { get; set; }
-        public float InversionMutationPerGeneProbability { get; set; }
+        public float MutationPerGeneProbability { get; set; }
         public float TournamentSelectionProbability { get; set; }
         public float ElitismPercent { get; set; }
 
@@ -70,7 +71,7 @@ namespace JobShopScheduling
                 MutationProbability = 0.3f;
                 CrossoverProbability = 0.75f;
                 // mutate 2 times per solution
-                InversionMutationPerGeneProbability = 0.05f;
+                MutationPerGeneProbability = 0.05f;
                 ElitismPercent = 0.02f;
 
                 TournamentSelectionProbability = 0.8f;
@@ -87,6 +88,26 @@ namespace JobShopScheduling
 
                 #endregion
             }
+        }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine($"Input file directory path: {InputFileDirectoryPath}");
+            sb.AppendLine($"Input file name: {InputFileName}");
+            sb.AppendLine($"Iterations count: {IterationsCount}");
+            sb.AppendLine($"Generations count: {GenerationsCount}");
+            sb.AppendLine($"Threads count: {ThreadsCount}");
+            sb.AppendLine($"Min population size: {MinPopulationSize}");
+            sb.AppendLine($"Max population size: {MaxPopulationSize}");
+
+            sb.AppendLine($"Crossover probability: {CrossoverProbability:F}");
+            sb.AppendLine($"Mutation probability: {MutationProbability:F}");
+            sb.AppendLine($"Mutation per gene probability: {MutationPerGeneProbability:F}");
+            sb.AppendLine($"Elitism percent: {ElitismPercent}");
+
+            return sb.ToString();
         }
     }
 }
