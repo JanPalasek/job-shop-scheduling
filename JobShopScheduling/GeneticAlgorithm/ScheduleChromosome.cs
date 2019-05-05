@@ -27,17 +27,24 @@
 
         public double? ScheduleLength { get; set; }
 
-        public ScheduleChromosome(JobShop jobShop) : base(jobShop.MachinesCount)
+        public ScheduleChromosome(JobShop jobShop) : this(jobShop, false)
+        {
+        }
+
+        private ScheduleChromosome(JobShop jobShop, bool generateNew) : base(jobShop.MachinesCount)
         {
             this.JobShop = jobShop;
 
-            // initialize genes
-            for (int i = 0; i < jobShop.MachinesCount; i++)
+            if (generateNew)
             {
-                var machineChromosome = new MachineChromosome(jobShop.MachineOperations[i]
-                    .AsShuffledEnumerable()
-                    .ToArray());
-                ReplaceGene(i, new Gene(machineChromosome));
+                // initialize genes
+                for (int i = 0; i < jobShop.MachinesCount; i++)
+                {
+                    var machineChromosome = new MachineChromosome(jobShop.MachineOperations[i]
+                        .AsShuffledEnumerable()
+                        .ToArray());
+                    ReplaceGene(i, new Gene(machineChromosome));
+                }
             }
         }
 
@@ -56,10 +63,17 @@
 
         public override IChromosome Clone()
         {
-            var scheduleChromosome = (ScheduleChromosome)base.Clone();
-            scheduleChromosome.JobShop = this.JobShop;
-            scheduleChromosome.ScheduleLength = this.ScheduleLength;
-            scheduleChromosome.Graph = this.Graph;
+            var scheduleChromosome = new ScheduleChromosome(this.JobShop, false)
+            {
+                ScheduleLength = this.ScheduleLength,
+                Graph = this.Graph,
+                Fitness =  this.Fitness,
+            };
+            var clonedGenes = GetGenes().Select(x => x.Value)
+                .Cast<MachineChromosome>().Select(x => x.Clone())
+                .Select(x => new Gene(x)).ToArray();
+            scheduleChromosome.ReplaceGenes(0, clonedGenes);
+
             return scheduleChromosome;
         }
 

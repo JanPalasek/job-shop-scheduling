@@ -68,5 +68,31 @@
             Assert.That(machineChromosome2[0], Is.EqualTo(operations[1]));
             Assert.That(machineChromosome2[1], Is.EqualTo(operations[3]));
         }
+
+        [Test]
+        public void CloneTest()
+        {
+            var clonedChromosome = this.chromosome.Clone();
+            Gene[] clonedGenes = clonedChromosome.GetGenes();
+            Gene[] genes = chromosome.GetGenes();
+            for (int i = 0; i < clonedGenes.Length; i++)
+            {
+                var machine = (MachineChromosome)genes[i].Value;
+                var clonedMachine = (MachineChromosome)clonedGenes[i].Value;
+
+                Assert.That(machine, Is.Not.SameAs(clonedMachine));
+                Assert.That(machine.GetGenes(), Is.Not.SameAs(clonedMachine.GetGenes()));
+
+                Gene[] machineGenes = machine.GetGenes();
+                Gene[] clonedMachineGenes = clonedMachine.GetGenes();
+                for (var j = 0; j < machineGenes.Length; j++)
+                {
+                    var machineGene = (Operation)machineGenes[j].Value;
+                    var clonedMachineGene = (Operation)clonedMachineGenes[j].Value;
+
+                    Assert.That(machineGene, Is.SameAs(clonedMachineGene));
+                }
+            }
+        }
     }
 }

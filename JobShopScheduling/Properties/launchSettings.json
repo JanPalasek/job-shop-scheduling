@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "JobShopScheduling": {
+      "commandName": "Project",
+      "commandLineArgs": "--file=\"Examples/ft06.in\""
+    }
+  }
+}
