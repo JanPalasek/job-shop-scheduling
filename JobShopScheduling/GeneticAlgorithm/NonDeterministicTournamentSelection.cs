@@ -40,7 +40,7 @@
                     chromosome = RandomizationProvider.Current.GetDouble() <= probability ? chromosome2 : chromosome1;
                 }
 
-                result.Add(chromosome);
+                result.Add(chromosome.Clone());
             }
 
             return result;

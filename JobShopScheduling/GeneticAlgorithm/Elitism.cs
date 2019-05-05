@@ -37,7 +37,7 @@
             // add best parents
             foreach (var chromosome in bestResults)
             {
-                offspring.Add(chromosome);
+                offspring.Add(chromosome.Clone());
             }
 
             return offspring;
