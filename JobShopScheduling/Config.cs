@@ -34,7 +34,9 @@ namespace JobShopScheduling
         public float ElitismPercent { get; set; }
 
         public float BackEdgeSwitchOrientationProbability { get; set; }
-        public float NormalEdgeSwitchOrientationProbability { get; set; }
+        public float ForwardEdgeSwitchOrientationProbability { get; set; }
+        
+        public float SameLevelEdgeSwitchOrientationProbability { get; set; }
 
 
         public Config(bool initializeDefaultValues)
@@ -69,7 +71,8 @@ namespace JobShopScheduling
                 TournamentSelectionProbability = 0.8f;
 
                 BackEdgeSwitchOrientationProbability = 0.95f;
-                NormalEdgeSwitchOrientationProbability = 0.05f;
+                ForwardEdgeSwitchOrientationProbability = 0.05f;
+                SameLevelEdgeSwitchOrientationProbability = 0.05f;
             
                 #endregion
             

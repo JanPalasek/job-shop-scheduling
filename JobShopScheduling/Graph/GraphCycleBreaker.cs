@@ -1,4 +1,6 @@
-﻿namespace JobShopScheduling.Graph
+﻿using GeneticSharp.Domain.Selections;
+
+namespace JobShopScheduling.Graph
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -15,12 +17,14 @@
     internal class GraphCycleBreaker
     {
         private readonly double backEdgeBreakProbability;
-        private readonly double otherEdgeBreakProbability;
+        private readonly double forwardEdgeBreakProbability;
+        private readonly double sameLevelEdgeBreakProbability;
 
-        public GraphCycleBreaker(double backEdgeBreakProbability, double otherEdgeBreakProbability)
+        public GraphCycleBreaker(double backEdgeBreakProbability, double forwardEdgeBreakProbability, double sameLevelEdgeBreakProbability)
         {
             this.backEdgeBreakProbability = backEdgeBreakProbability;
-            this.otherEdgeBreakProbability = otherEdgeBreakProbability;
+            this.forwardEdgeBreakProbability = forwardEdgeBreakProbability;
+            this.sameLevelEdgeBreakProbability = sameLevelEdgeBreakProbability;
         }
 
         /// <summary>
@@ -54,21 +58,11 @@
                             if (operation1.JobId != operation2.JobId
                                 && operation1.MachineId == operation2.MachineId)
                             {
-                                // if it is back edge => switch orientation of the edge with backEdgeBreakProbability
-                                if (operation1.Order > operation2.Order
-                                    && RandomizationProvider.Current.GetDouble() <= backEdgeBreakProbability)
-                                {
-                                    // switch edge orientation
-                                    graph.RemoveEdge(operation1, operation2);
-                                    graph.AddEdge(operation2, operation1);
-
-                                    changedOrientationEdges.Add((operation1, operation2));
-                                    goto cycleOut;
-                                }
-
-                                //// if it isn't back edge => switch orientation of the edge with otherEdgeBreakProbability
-                                if (operation1.Order <= operation2.Order
-                                         && RandomizationProvider.Current.GetDouble() <= otherEdgeBreakProbability)
+                                double probability = RandomizationProvider.Current.GetDouble();
+                                // switch directions of edge with prob for back edge, forward edge or same level edge
+                                if ((operation1.Order > operation2.Order && probability <= backEdgeBreakProbability)
+                                    || (operation1.Order < operation2.Order && probability <= forwardEdgeBreakProbability)
+                                    || (operation1.Order == operation2.Order && probability <= sameLevelEdgeBreakProbability))
                                 {
                                     // switch edge orientation
                                     graph.RemoveEdge(operation1, operation2);

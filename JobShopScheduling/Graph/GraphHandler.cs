@@ -84,8 +84,11 @@
         public List<(Operation Operation1, Operation Operation2)> BreakCycles(DiGraph<Operation> graph)
         {
             // break cycles
-            var edgesThatChangedOrientation = new GraphCycleBreaker(Global.Config.BackEdgeSwitchOrientationProbability,
-                Global.Config.NormalEdgeSwitchOrientationProbability).BreakCycles(graph);
+            var edgesThatChangedOrientation = new GraphCycleBreaker(
+                Global.Config.BackEdgeSwitchOrientationProbability,
+                Global.Config.ForwardEdgeSwitchOrientationProbability,
+                Global.Config.SameLevelEdgeSwitchOrientationProbability)
+                .BreakCycles(graph);
 
             return edgesThatChangedOrientation;
         }
