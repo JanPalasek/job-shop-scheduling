@@ -34,6 +34,11 @@ namespace JobShopScheduling
         /// </summary>
         public PlotModel PlotModel { get; set; }
 
+        /// <summary>
+        /// Event that will be invoked after every generation.
+        /// </summary>
+        public event Action<Generation> GenerationRan;
+
 
         /// <summary>
         /// Creates instance of <see cref="JobShopGeneticAlgorithm"/> from parameters.
@@ -132,7 +137,8 @@ namespace JobShopScheduling
                         ((ScheduleChromosome)geneticAlgorithm.Population.BestChromosome).ScheduleLength.Value));
                 };
             }
-            
+
+            geneticAlgorithm.GenerationRan += (o, e) => GenerationRan?.Invoke(geneticAlgorithm.Population.CurrentGeneration);
             geneticAlgorithm.TaskExecutor = new ParallelTaskExecutor()
             {
                 MinThreads = 1,
