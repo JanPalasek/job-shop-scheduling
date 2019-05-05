@@ -91,7 +91,24 @@
                     var clonedMachineGene = (Operation)clonedMachineGenes[j].Value;
 
                     Assert.That(machineGene, Is.SameAs(clonedMachineGene));
+                    Assert.That(machineGenes[j], Is.Not.SameAs(clonedMachineGenes[j]));
                 }
+            }
+        }
+
+        [Test]
+        public void CreateNewTest()
+        {
+            var clonedChromosome = this.chromosome.CreateNew();
+            Gene[] clonedGenes = clonedChromosome.GetGenes();
+            Gene[] genes = chromosome.GetGenes();
+            for (int i = 0; i < clonedGenes.Length; i++)
+            {
+                var machine = (MachineChromosome)genes[i].Value;
+                var clonedMachine = (MachineChromosome)clonedGenes[i].Value;
+
+                Assert.That(machine, Is.Not.SameAs(clonedMachine));
+                Assert.That(machine.GetGenes(), Is.Not.SameAs(clonedMachine.GetGenes()));
             }
         }
     }

@@ -20,14 +20,14 @@
         /// <summary>
         /// List of jobs that have to be done.
         /// </summary>
-        public JobShop JobShop { get; private set; }
+        public JobShop JobShop { get; }
 
         internal DiGraph<Operation> Graph { get; private set; }
         internal IReadOnlyList<Operation> TopologicalOrder { get; private set; }
 
         public double? ScheduleLength { get; set; }
 
-        public ScheduleChromosome(JobShop jobShop) : this(jobShop, false)
+        public ScheduleChromosome(JobShop jobShop) : this(jobShop, true)
         {
         }
 
