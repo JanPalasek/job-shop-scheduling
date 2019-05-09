@@ -1,5 +1,5 @@
 # job-shop-scheduling
-This repository is an implementation of job-shop scheduling problem using C#.
+This repository is an implementation of job-shop scheduling problem using C#. Algorithm is described <a href="http://janpalasek.com/jobshop.html">here</a>.
 
 ## Command-line arguments:
 - Path to the input file (file from which the job shop input will be loaded) = *-f* or *--file* (required)
