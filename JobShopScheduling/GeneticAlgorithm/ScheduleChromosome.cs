@@ -109,13 +109,15 @@
             this.TopologicalOrder = topologicalOrder;
         }
 
-        public string GetOperationStrings()
+        public string GetStringRepresentation()
         {
             StringBuilder sb = new StringBuilder();
 
+            int i = 0;
             foreach (var machineChromosome in GetGenes().Select(x => x.Value).Cast<MachineChromosome>())
             {
-                sb.AppendLine(machineChromosome.GetOperationStrings());
+                sb.AppendLine($"Machine {i}: {machineChromosome.GetOperationStrings()}");
+                i++;
             }
 
             return sb.ToString();

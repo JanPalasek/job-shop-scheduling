@@ -28,6 +28,8 @@ namespace JobShopScheduling
         private readonly int iterationsCount;
         private readonly ILogger logger;
         private readonly bool adaptive;
+        
+        public ScheduleChromosome BestSchedule { get; private set; }
 
         /// <summary>
         ///  Plot model (if you want to pass it instead of letting the component create it itself
@@ -66,7 +68,6 @@ namespace JobShopScheduling
             logger.Information($"GA started");
             logger.Information($"Adaptive: {adaptive}");
 
-            ScheduleChromosome bestChromosome = null;
             for (int i = 0; i < iterationsCount; i++)
             {
                 logger.Information($"Iteration: {i + 1}");
@@ -83,17 +84,19 @@ namespace JobShopScheduling
                 }
                 logger.Information(string.Empty);
 
-                if (bestChromosome == null)
+                if (BestSchedule == null)
                 {
-                    bestChromosome = chromosome;
+                    BestSchedule = chromosome;
                 }
                 else
                 {
-                    bestChromosome = chromosome.Fitness > bestChromosome.Fitness ? chromosome : bestChromosome;
+                    BestSchedule = chromosome.Fitness > BestSchedule.Fitness ? chromosome : BestSchedule;
                 }
             }
 
-            logger.Information($"Best chromosome for all iterations: {bestChromosome.ScheduleLength}");
+            logger.Information($"Best chromosome for all iterations: {BestSchedule.ScheduleLength}");
+            logger.Information("Best schedule");
+            logger.Information(BestSchedule.GetStringRepresentation());
         }
 
         private ScheduleChromosome RunOnce(LineSeries lineSeries = null)

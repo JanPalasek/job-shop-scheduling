@@ -41,6 +41,16 @@ namespace JobShopScheduling
             gaAdaptive.Run();
             var adaptiveSeries = plottingUtils.AverageY(gaAdaptive.PlotModel.Series.OfType<LineSeries>());
             adaptiveSeries.Title = "Adaptive";
+            using (var sw = new StreamWriter($"{inputName}.out"))
+            {
+                sw.WriteLine("Adaptive");
+                sw.WriteLine();
+                
+                sw.WriteLine(gaAdaptive.BestSchedule.GetStringRepresentation());
+                sw.WriteLine($"Schedule length: {gaAdaptive.BestSchedule.ScheduleLength}");
+                
+                sw.WriteLine();
+            }
 
             var gaNonAdaptive = new JobShopGeneticAlgorithm(jobShop, iterationsCount, logger: Log.Logger, adaptive: false)
             {
@@ -56,6 +66,17 @@ namespace JobShopScheduling
             plotModel.Series.Add(nonAdaptiveSeries);
             
             plottingUtils.ExportPlotModelToSvg(inputName, plotModel);
+
+            using (var sw = new StreamWriter($"{inputName}.out", append: true))
+            {
+                sw.WriteLine("Non-adaptive");
+                sw.WriteLine();
+                
+                sw.WriteLine(gaNonAdaptive.BestSchedule.GetStringRepresentation());
+                sw.WriteLine($"Schedule length: {gaNonAdaptive.BestSchedule.ScheduleLength}");
+                
+                sw.WriteLine();
+            }
         }
 
         /// <summary>
