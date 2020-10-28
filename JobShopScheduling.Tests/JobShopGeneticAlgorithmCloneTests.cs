@@ -10,8 +10,11 @@
     using NUnit.Framework;
     using Serilog;
 
+    /// <summary>
+    /// Verifies whether Job Shop Genetic Algorithm doesn't copy.
+    /// </summary>
     [TestFixture]
-    public class JobShopGeneticAlgorithmTests
+    public class JobShopGeneticAlgorithmCloneTests
     {
         private JobShopGeneticAlgorithm ga;
 
