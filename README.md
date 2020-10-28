@@ -1,6 +1,8 @@
 # job-shop-scheduling
 This repository is an implementation of job-shop scheduling problem using C#. Algorithm is described <a href="http://janpalasek.com/jobshop.html">here</a>.
 
+[![CircleCI](https://circleci.com/gh/JanPalasek/job-shop-scheduling.svg?style=svg)](https://circleci.com/gh/JanPalasek/job-shop-scheduling)
+
 ## Command-line arguments:
 - Path to the input file (file from which the job shop input will be loaded) = *-f* or *--file* (required)
 - Number of threads that will be used = *-t* or *--threads* (optional)
