@@ -142,11 +142,15 @@ namespace JobShopScheduling
             }
 
             geneticAlgorithm.GenerationRan += (o, e) => GenerationRan?.Invoke(geneticAlgorithm.Population.CurrentGeneration);
-            geneticAlgorithm.TaskExecutor = new ParallelTaskExecutor()
+            if (Global.Config.ThreadsCount > 1)
             {
-                MinThreads = 1,
-                MaxThreads = Global.Config.ThreadsCount
-            };
+                geneticAlgorithm.TaskExecutor = new ParallelTaskExecutor()
+                {
+                    MinThreads = 1,
+                    MaxThreads = Global.Config.ThreadsCount
+                };
+            }
+
             stopWatch.Start();
             geneticAlgorithm.Start();
             stopWatch.Stop();
