@@ -89,6 +89,9 @@
             }
 
             var graphHandler = new GraphHandler();
+            
+            // in order to fix the chromosome we need to create graph and remove cycles from it
+            // cycles are removed by rotating edges of the cycle until there is no cycle
             var graph = graphHandler.CreateGraph(this);
             graphHandler.BreakCycles(graph);
 
@@ -109,6 +112,10 @@
             this.TopologicalOrder = topologicalOrder;
         }
 
+        /// <summary>
+        /// Obtains string representation of the schedule.
+        /// </summary>
+        /// <returns></returns>
         public string GetStringRepresentation()
         {
             StringBuilder sb = new StringBuilder();

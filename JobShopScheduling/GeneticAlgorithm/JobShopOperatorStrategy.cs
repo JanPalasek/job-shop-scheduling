@@ -10,6 +10,9 @@
     using GeneticSharp.Domain.Populations;
     using GeneticSharp.Domain.Randomizations;
 
+    /// <summary>
+    /// Describes how crossover and mutations are performed on a population.
+    /// </summary>
     public class JobShopOperatorStrategy : IOperatorsStrategy
     {
         public IList<IChromosome> Cross(IPopulation population, ICrossover crossover, float crossoverProbability, IList<IChromosome> parents)
@@ -22,7 +25,7 @@
                 var selectedParents = clonedParents.Skip(i).Take(crossover.ParentsNumber).ToList();
 
                 // If match the probability cross is made, otherwise the offspring is an exact copy of the parents.
-                // Checks if the number of selected parents is equal which the crossover expect, because the in the end of the list we can
+                // Checks if the number of selected parents is equal which the crossover expect, because in the end of the list we can
                 // have some rest chromosomes.
                 if (selectedParents.Count == crossover.ParentsNumber)
                 {

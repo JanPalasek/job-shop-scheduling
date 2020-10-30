@@ -10,8 +10,8 @@
 
     /// <summary>
     /// This component performs the elitism.
-    /// It copies <see cref="elitistPercentage"/> chromosomes from previous generation
-    /// into the offspring.
+    /// It copies <see cref="elitistPercentage"/> best chromosomes from previous generation
+    /// into the offspring generation.
     /// </summary>
     public class Elitism : ReinsertionBase
     {

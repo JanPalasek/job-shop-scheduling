@@ -1,4 +1,7 @@
-﻿namespace JobShopScheduling.JobShopStructures
+﻿using System;
+using JobShopScheduling.Utils;
+
+namespace JobShopScheduling.JobShopStructures
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -32,12 +35,42 @@
         /// </summary>
         public int MachinesCount { get; }
 
-        public void Verify()
+        public void Validate()
         {
-            // TODO: implement verifying the input
+            if (MachinesCount < 3)
+            {
+                throw new ArgumentOutOfRangeException(nameof(MachinesCount), $"There has to be at least 3 machines. You submitted {MachinesCount}");
+            }
+
+            foreach (var operation in Operations)
+            {
+                if (operation.Order < 0)
+                {
+                    throw new ArgumentException();
+                }
+
+                if (operation.MachineId < 0 || operation.MachineId >= MachinesCount)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(operation.MachineId), $"Invalid machine id {operation.MachineId} of operation {operation.Id}");
+                }
+
+                var machineOperations = MachineOperations[operation.MachineId];
+
+                if (!machineOperations.Any(x => x.Equals(operation)))
+                {
+                    throw new ArgumentException($"Operation {operation.Id} was not found on machine {operation.MachineId}");
+                }
+            }
+
+            int[] notFilledEnoughMachines = MachineOperations.IndicesOf(x => x.Length < 3).ToArray();
+            if (notFilledEnoughMachines.Length > 0)
+            {
+                throw new ArgumentException($"Every machine must have at least 2 operations. " +
+                                            $"Machines not fulfilling this are: {string.Join(',', notFilledEnoughMachines)}");
+            }
         }
 
-        public JobShop(List<Job> jobs)
+        public JobShop(List<Job> jobs, bool validate = true)
         {
             Jobs = jobs;
             Operations = Jobs.SelectMany(x => x.Operations).ToArray();
@@ -48,22 +81,10 @@
             {
                 MachineOperations[i] = Operations.Where(x => x.MachineId == i).ToArray();
             }
-        }
 
-        public JobShop(List<Operation> operations)
-        {
-            var groupedByJob = operations.GroupBy(x => x.JobId).OrderBy(x => x.Key);
-            var jobs = groupedByJob.Select(x => new {JobId = x.Key, JobOperations = x.OrderBy(y => y.Order).ToList()})
-                .Select(x => new Job(x.JobOperations)).ToList();
-
-            Operations = operations.ToArray();
-            Jobs = jobs;
-            MachinesCount = Operations.Max(x => x.MachineId) + 1;
-
-            MachineOperations = new Operation[MachinesCount][];
-            for (int i = 0; i < MachineOperations.Length; i++)
+            if (validate)
             {
-                MachineOperations[i] = Operations.Where(x => x.MachineId == i).ToArray();
+                Validate();
             }
         }
     }

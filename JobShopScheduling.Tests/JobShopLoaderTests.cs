@@ -11,7 +11,7 @@
         public void LoadTest()
         {
             var loader = new JobShopLoader();
-            var jobShop = loader.Load("TestExamples/test1.in");
+            var jobShop = loader.Load("TestExamples/test1.in", false);
             var job1 = jobShop.Jobs[0];
             var job2 = jobShop.Jobs[1];
 

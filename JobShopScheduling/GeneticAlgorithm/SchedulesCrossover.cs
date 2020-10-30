@@ -5,6 +5,9 @@
     using GeneticSharp.Domain.Chromosomes;
     using GeneticSharp.Domain.Crossovers;
 
+    /// <summary>
+    /// Performs crossover of the schedules.
+    /// </summary>
     public class SchedulesCrossover : ICrossover
     {
         private readonly ICrossover permutationCrossover;
@@ -23,6 +26,12 @@
             MinChromosomeLength = 0;
         }
 
+        /// <summary>
+        /// Performs crossover of the two schedule chromosomes.
+        /// </summary>
+        /// <param name="parents"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
         public IList<IChromosome> Cross(IList<IChromosome> parents)
         {
             var scheduleParent1 = parents[0];

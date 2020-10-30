@@ -16,7 +16,7 @@
         /// </summary>
         /// <param name="path">File path.</param>
         /// <returns></returns>
-        public JobShop Load(string path)
+        public JobShop Load(string path, bool validate = true)
         {
             using (var reader = new StreamReader(path))
             {
@@ -41,7 +41,7 @@
                     jobs.Add(new Job(operations));
                 }
 
-                var jobShop = new JobShop(jobs);
+                var jobShop = new JobShop(jobs, validate);
 
                 return jobShop;
             }

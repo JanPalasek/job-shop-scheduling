@@ -76,7 +76,7 @@ namespace JobShopScheduling.Graph
                     }
                 }
 
-            cycleOut:;
+                cycleOut:;
             } while (components.Count > 0);
 
             return changedOrientationEdges;

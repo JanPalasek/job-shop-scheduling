@@ -16,7 +16,7 @@
         [SetUp]
         public void SetUp()
         {
-            var jobShop = new JobShopLoader().Load("TestExamples/test1.in");
+            var jobShop = new JobShopLoader().Load("TestExamples/test1.in", false);
             chromosome = new ScheduleChromosome(jobShop);
 
             var machineChromosome1 = new MachineChromosome(new int[]

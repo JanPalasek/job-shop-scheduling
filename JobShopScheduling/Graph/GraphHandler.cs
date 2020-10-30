@@ -43,8 +43,11 @@
 
             var graph = new DiGraph<Operation>();
 
+            // create source and target
             var source = graph.AddVertex(new Operation(int.MinValue, int.MinValue, int.MinValue, int.MinValue, 0));
             var target = graph.AddVertex(new Operation(int.MaxValue, int.MaxValue, int.MaxValue, int.MaxValue, 0));
+            
+            // create vertices according to jobs descriptions and connect them to each other and to the source and target
             foreach (var job in chromosome.JobShop.Jobs)
             {
                 var lastOperationVertex = source;
@@ -61,7 +64,9 @@
                 graph.AddEdge(lastOperationVertex.Value, target.Value);
             }
 
-            // add machine edges
+            // add edges between all machines oriented base on the schedule
+            // we need to add edges between all of them so if we rotate an edge we don't have to add new missing edges
+            // between some machines
             foreach (var operation in chromosome.JobShop.Operations)
             {
                 if (machineOperationsDictionary.TryGetValue(operation, out var nextMachineOperations))
